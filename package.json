@@ -1,15 +1,27 @@
 {
-  "name": "app",
+  "name": "web_app",
   "version": "1.0.0",
-  "description": "this is an example for you guys",
+  "description": "A movie selector application that was written for CompSci 366: Database Management Systems.",
   "main": "app.js",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "pug": "^3.0.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.14"
+  },
   "scripts": {
-    "start": "node app.js"
+    "devStart": "nodemon app.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flynn248/movie-web-app.git"
+  },
+  "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/flynn248/movie-web-app/issues"
+  },
+  "homepage": "https://github.com/flynn248/movie-web-app#readme"
 }
