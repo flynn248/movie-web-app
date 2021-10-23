@@ -26,7 +26,7 @@ const PORT = process.env.PORT || 9090
 
 // Go to localhost:9090 in your browser while the program is running
 app.get('/', (req, res) => {
-  res.render('search.pug'); 
+  res.render('search.pug');
 });
 
 app.get('/Results', (req, res) => {
@@ -45,18 +45,16 @@ app.get('/login/verify', (req, res) => {
     // if username is correct, but passwor is not, deny entry
     //    - redirect back to login page
     //    - show message saying incorrect password
-    if(req.query.userName != "Charlie"){
+    if(req.query.userName != "Erdman"){
       throw 200
     }
   } catch (e) {
     res.redirect('/login')
   }
-
-  //res.send([req.query.userName, req.query.password])
+  res.send(document.getElementById('login'))
 })
 // Starts an http server on the $PORT environment variable
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
   console.log('Press Ctrl+C to quit.');
 });
-
