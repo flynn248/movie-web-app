@@ -38,7 +38,21 @@ app.get('/login', (req, res) => {
 })
 
 app.get('/login/verify', (req, res) => {
-  res.send([req.query.user_email, req.query.password])
+  try {
+    // verify login info
+    // check if user exists
+    // if not, deny login saying user does not exist
+    // if username is correct, but passwor is not, deny entry
+    //    - redirect back to login page
+    //    - show message saying incorrect password
+    if(req.query.userName != "Charlie"){
+      throw 200
+    }
+  } catch (e) {
+    res.redirect('/login')
+  }
+
+  //res.send([req.query.userName, req.query.password])
 })
 // Starts an http server on the $PORT environment variable
 app.listen(PORT, () => {
