@@ -8,7 +8,9 @@
     "pug": "^3.0.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.14"
+    "nodemon": "^2.0.14",
+    "livereload": "^0.9.3",
+    "connect-livereload": "^0.6.1"
   },
   "scripts": {
     "devStart": "nodemon app.js"

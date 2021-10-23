@@ -1,0 +1,65 @@
+.header-ul {
+    display: inline;
+    padding: 1%;
+}
+
+.header-li {
+    display: inline-block;
+    padding-left:1%;
+}
+
+.header-div {
+    background-color: rgb(92, 19, 134);
+}
+
+.jim-carrey {
+    background-color: rgb(189, 3, 3);
+    background-image: url("../assets/jc-grinch-face.png");
+    background-size: 10vmax;
+}
+
+body {
+    background-color: rgba(77, 76, 76, 0.692);
+}
+
+
+a {
+    color: #5e4242;
+}
+
+.home-link {
+    color: rgb(255, 255, 15);
+}
+
+a:hover {
+    color: rgb(5, 139, 0);
+}
+
+.avatar {
+    width: 300px;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.center{
+    padding-top: 3%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.container {
+    width: 100%;
+}
+
+.floated-right{
+    width: 60%;
+    float: right;
+}
+
+.floated-left{
+    width: 60%;
+    float: right;
+}
