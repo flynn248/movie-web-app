@@ -1,0 +1,20 @@
+.header-ul {
+    display: inline;
+    padding: 1%;
+}
+
+.header-li {
+    text-align: center;
+}
+
+.header-div {
+    background-color: rgb(92, 19, 134);
+}
+
+.home-link {
+    color: rgb(255, 255, 15);
+}
+
+.home-link:hover {
+    color: rgb(0, 255, 242);
+}
