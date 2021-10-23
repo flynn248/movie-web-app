@@ -32,6 +32,14 @@ app.get('/', (req, res) => {
 app.get('/Results', (req, res) => {
   res.render('result.pug')
 })
+
+app.get('/login', (req, res) => {
+  res.render('login.pug')
+})
+
+app.get('/login/verify', (req, res) => {
+  res.send([req.query.user_email, req.query.password])
+})
 // Starts an http server on the $PORT environment variable
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
