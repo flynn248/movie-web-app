@@ -11,15 +11,15 @@ html(lang="en")
             include header.pug
         div(class="Center" style="padding-left:100px; width: 100%" )
             h2(class='login') Login
-            form(action="/login/verify" method="get" style="padding-left:100px; width: 100%")
-                label(for="user_email") Email:
+            form(id='login-form' action="/login/verify" method="get" style="padding-left:100px; width: 100%")
+                label(for="user_email") UserName:
                 br
-                input(type="text" name="user_email" placeholder="email" style="padding-left:20px; width: 30%;")
+                input(class='login-input' type="text" name="userName" placeholder="UserName")
                 br
                 br
                 label(for="password") Password:
                 br
-                input(type="text" name="password" placeholder="Password" style="padding-left:20px; width: 30%;")
+                input(class='login-input' type="text" name="password" placeholder="Password")
                 br
                 input(type="submit" value="Submit")
         
