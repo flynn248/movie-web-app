@@ -8,7 +8,5 @@
 }
 
 body {
-    background-image: url(./assets/jc-grinch-face.png);
-    background-size: 10%;
-    background-color: aquamarine;
+    background: aquamarine;
 }
