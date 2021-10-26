@@ -1,0 +1,25 @@
+html(lang="en")
+    head
+        meta(charset='utf-8')
+        title Login
+        meta(name='viewport', content='width=device-width, initial-scale=1.0')
+        link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T', crossorigin='anonymous')
+        link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Roboto')
+        link(rel="stylesheet", href='../signup.css')
+    body
+        .header
+            include header.pug
+        div(class="Center" style="padding-left:100px; width: 100%" )
+            h2(class='login') Sign Up
+            form(id='login-form' action="/login/verify" method="get" style="padding-left:100px; width: 100%")
+                label(for="userName") UserName:
+                br
+                input(class='login-input' type="text" name="userName" placeholder="UserName")
+                br
+                br
+                label(for="password") Password:
+                br
+                input(class='login-input' type="text" name="password" placeholder="Password")
+                br
+                input(type="submit" value="Submit")
+        

@@ -51,7 +51,11 @@ app.get('/login/verify', (req, res) => {
   } catch (e) {
     res.redirect('/login')
   }
-  res.send(document.getElementById('login'))
+  res.redirect('/')
+})
+
+app.get('/signup', (req, res) => {
+  res.render('signup.pug')
 })
 // Starts an http server on the $PORT environment variable
 app.listen(PORT, () => {
