@@ -6,6 +6,7 @@ html(lang="en")
         link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T', crossorigin='anonymous')
         link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Roboto')
         link(rel="stylesheet", href='../signup.css')
+        script(src="../login-signup.js")
     body
         .header
             include header.pug
@@ -19,7 +20,11 @@ html(lang="en")
                 br
                 label(for="password") Password:
                 br
-                input(class='login-input' type="text" name="password" placeholder="Password")
+                input(id='pw-entry' class='login-input' type="password" name="password" placeholder="Password")
+                input(type="checkbox" onclick="Toggle()" name="show-pw-ch-box")
+                label(for="show-pw-ch-box")
+                    b Show Password
+                br
                 br
                 input(type="submit" value="Submit")
         
