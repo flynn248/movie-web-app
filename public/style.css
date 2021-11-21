@@ -1,7 +1,9 @@
 .jim-carrey {
     background-image: url(./assets/jc-grinch-face.png);
-    background-size: 10%;
+    background-size: 50%;
     background-color: aquamarine;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 body {

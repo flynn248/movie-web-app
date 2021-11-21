@@ -57,7 +57,21 @@ app.get('/login/verify', (req, res) => {
 app.get('/signup', (req, res) => {
   res.render('signup.pug')
 })
+
+app.get('/signup/process', (req, res) => {
+  res.send(req.query.password)
+})
 // Starts an http server on the $PORT environment variable
+/*
+var http = require('http')
+http.createServer(app).listen(9090)
+app.listen(() => {
+  var server = http.createServer(this)
+  console.log(server)
+  return server.listen.apply(server)
+});
+*/
+
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
   console.log('Press Ctrl+C to quit.');
