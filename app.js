@@ -27,23 +27,6 @@ const PORT = process.env.PORT || 9090
 // Go to localhost:9090 in your browser while the program is running
 app.get('/', (req, res) => {
   res.render('search.pug');
-  const database = require('./functions/database')
-  db = database.db
-
-  sql = `SELECT * FROM testM WHERE movieID=2`
-
-  db.query(sql, (err, result) => {
-      if(err) throw err
-      result.forEach(element => {
-          obj = {
-          title: element.movieID,
-          id: element.genere
-        }
-        console.log(obj);
-      });
-
-  });
-
 });
 
 app.get('/Results', (req, res) => {
