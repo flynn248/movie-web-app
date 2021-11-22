@@ -16,19 +16,18 @@ def datFilePath() -> tuple[str, str]:
         raise FileNotFoundError
 
 def convertToCsv(datFilePath: str, datFileName: str):
-    delimeter = '\\n'
-    separator = '\\t'
+    delimeter = '\n'
+    separator = '\t'
     csvFileName = datFileName[:-3] + "csv"
 
     with open(datFilePath + '\\' + datFileName) as f:
         next(f) # Skip header line
-        for line in f:
-            print(repr(line))
-        with open(datFilePath + '\\' + csvFileName, 'w') as csvFile:
-            dataWriter = csv.writer(csvfile=csvFile)
+        with open(datFilePath + '\\' + csvFileName, 'w', newline='') as csvFile:
+            dataWriter = csv.writer(csvFile)
             for line in f:
-                dataWriter.writerow("Cake")
-                break
+                line = line.strip(delimeter)
+                dataWriter.writerow(line.split(separator))
+
 
 
 def main():
