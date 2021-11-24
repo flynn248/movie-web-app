@@ -4,7 +4,7 @@ const db = database.db
 const getMovieFromSearch = (type, param) => {
     return new Promise((resolve,reject) => {
         if (type == 'title')
-            sql = `SELECT movieID, title FROM Movie WHERE title LIKE ‘%${user_input}%’;`;
+            sql = `SELECT movieID, title FROM TestMovie WHERE title LIKE '%${param}%';`;
         else if (type == 'genre')
             sql = `SELECT DISTINCT movieID, genere FROM testM WHERE genere LIKE '%${param}%'`
         else if (type == 'director')
