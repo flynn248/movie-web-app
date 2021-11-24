@@ -10,8 +10,9 @@ html
     body 
         .header
             include header.pug
-        div(class="Center" style="padding-left:100px; width: 100%" )
-            h2 Search
-            form(action="/" method="get" style="padding-left:100px; width: 100%")
-                input(type="text" name="param" placeholder="Search Parameters" style="padding-left:20px; width: 30%;")
-                button(type="submit") Press For Chocolate Cake
+    h2 Results
+    ol
+        h3
+            each item in Result.movies
+                a(href=`movie/${item.id}`)
+                    li=item.title
