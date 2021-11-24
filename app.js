@@ -110,6 +110,13 @@ app.listen(() => {
   return server.listen.apply(server)
 });
 */
+app.get('/movie', (req, res) => {
+  res.render('moviePage.pug')
+})
+
+app.get('/user', (req, res) => {
+  res.render('userPage.pug')
+})
 
 app.listen(PORT, () => {
   console.log(`App running on localhost:${PORT}`);
