@@ -49,3 +49,8 @@ a {
     width: 10%;
     float: right;
 }
+
+.wrapper{
+    margin: 0 auto;
+    width: 100%;
+}

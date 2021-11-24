@@ -1,0 +1,9 @@
+#err-img{
+    width: 300px;
+    height: 400px;
+    background-image: url(./assets/aw-snap.jpg);
+    background-color: aquamarine;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left;
+}
