@@ -4,7 +4,7 @@ import os
 import csv
 
 FILE_PATH = "C:\\Users\\sflyn\\Documents\\UW-Whitewater\\Fall 2021\\Database Mgmt Systems\\Movie Database"
-FILE_NAME = "movie_genres.dat"
+FILE_NAME = "movies.dat"
 
 def datFilePath() -> tuple[str, str]:
     filepath = input("Enter the directory path of the .dat file you'd like to convert: ")
@@ -26,7 +26,11 @@ def convertToCsv(datFilePath: str, datFileName: str):
             dataWriter = csv.writer(csvFile)
             for line in f:
                 line = line.strip(delimeter)
-                dataWriter.writerow(line.split(separator))
+                line = line.replace('\\N', '')
+                line = line.split(separator)
+                line = line[:3] + line[5:]
+                dataWriter.writerow(line)
+
 
 
 
@@ -35,7 +39,8 @@ def main():
 #        filePath = datFilePath()
 #    except Exception:
 #        print(f"Failed to find")
-    convertToCsv(FILE_PATH, FILE_NAME)
+    #convertToCsv(FILE_PATH, FILE_NAME)
+    
     print("cake")
 
 if __name__ == '__main__':
