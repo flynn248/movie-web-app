@@ -1,9 +1,10 @@
 ## Script converts a .dat format file to a .csv file
 
+from io import FileIO, TextIOWrapper
 import os
 import csv
 
-FILE_PATH = "C:\\Users\\Shane\\Documents\\UW-Whitewater\\Fall 2021\\Movie Data"
+FILE_PATH = r"C:\Users\Shane\Documents\UW-Whitewater\Fall 2021\Movie Data"
 FILE_NAME = "movies.dat"
 
 def datFilePath() -> tuple[str, str]:
@@ -17,29 +18,49 @@ def datFilePath() -> tuple[str, str]:
         raise FileNotFoundError
 
 def createCSVDir(filePath: str):
-    csvDir = "Database CSV"
+    csvDir = "Data CSV"
     path = os.path.join(filePath, csvDir)
     if not os.path.exists(path):
         os.mkdir(path)
+    return path
 
 def convertToCsv(datFilePath: str, datFileName: str):
     delimeter = '\n'
     separator = '\t'
-    csvFileName = datFileName[:-3] + "csv"
+    csvFileName = input("Enter csv file name: ") + ".csv"
     datPath = os.path.join(datFilePath, datFileName)
-    
-    createCSVDir(datFilePath)
+    csvPath = os.path.join(createCSVDir(datFilePath), csvFileName)
 
-    with open(datPath) as f:
+    with open(datPath) as f, open(datFilePath + '\\' + "movie_countries.dat") as f2:
         next(f) # Skip header line
-        with open(datFilePath + '\\' + csvFileName, 'w', newline='') as csvFile:
+        next(f2)
+        with open(csvPath, 'w', newline='') as csvFile:
+            seen = set() # set for fast O(1) amortized lookup
             dataWriter = csv.writer(csvFile)
+            i = [1]
+
             for line in f:
+                line2 = f2.readline()
+                # Stip out the unwanted stuff
                 line = line.strip(delimeter)
                 line = line.replace('\\N', '')
                 line = line.split(separator)
-                line = line[:3] + line[5:]
+
+                line2 = line2.strip(delimeter)
+                line2 = line2.replace('\\N', '')
+                line2 = line2.split(separator)
+
+                line = line[:3] + line[5:6] + line2[1:] + line[6:9] + line[12:14] + line[17:19] + line[20:]
+                
+                # Check for duplicates
+                strLine = ''.join(line)
+                if strLine in seen: 
+                    continue # skip duplicate
+                seen.add(strLine)
+                
                 dataWriter.writerow(line)
+
+                i[0] += 1
 
 
 
