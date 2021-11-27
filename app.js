@@ -11,6 +11,7 @@ server.server.once("connection", () => {
 
 var connectLiveReload = require("connect-livereload")
 
+const Search = require(__dirname + '/functions/search.js')
 const express = require('express');
 const app = express();
 const path = require('path')
@@ -27,6 +28,7 @@ const PORT = process.env.PORT || 9090
 // Go to localhost:9090 in your browser while the program is running
 app.get('/', (req, res) => {
   res.render('search.pug');
+/*
   const database = require('./functions/database')
   db = database.db
 
@@ -43,11 +45,31 @@ app.get('/', (req, res) => {
       });
 
   });
-
+*/
 });
 
 app.get('/Results', (req, res) => {
-  res.render('result.pug')
+  searchInput = req.query.param
+  searchType = req.query.type
+  Search.getMovieFromSearch(searchType, searchInput).then((queryResults) => {
+    Result = queryResults
+    if(Result.movies.length != 0){
+      console.log(Result)
+      res.render('result.pug', Result)
+    }
+    else {
+      ErrMsg = {
+        message: `Unfortunately we could not find a movie with the input of ${searchInput}`
+      }
+      res.render('errorScreen.pug', ErrMsg)
+    }
+  })
+})
+
+app.get('/movie/:movieID', (req, res) =>{
+  console.log("Hello")
+  movieID = req.params['movieID']
+  res.send(`${movieID}`)
 })
 
 app.get('/login', (req, res) => {
@@ -72,7 +94,7 @@ app.get('/login/verify', (req, res) => {
 })
 
 app.get('/signup', (req, res) => {
-  res.render('signup.pug')
+  res.render('signup.pug') 
 })
 
 app.get('/signup/process', (req, res) => {
@@ -88,8 +110,15 @@ app.listen(() => {
   return server.listen.apply(server)
 });
 */
+app.get('/movie', (req, res) => {
+  res.render('moviePage.pug')
+})
+
+app.get('/user', (req, res) => {
+  res.render('userPage.pug')
+})
 
 app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
+  console.log(`App running on localhost:${PORT}`);
   console.log('Press Ctrl+C to quit.');
 });
