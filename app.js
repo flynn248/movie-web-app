@@ -97,20 +97,31 @@ app.get('/login', (req, res) => {
 })
 
 app.get('/login/verify', (req, res) => {
+  userName = req.query.userName
+  pwd = req.query.password
+  Search.verifyUserProfile(userName, pwd).then((queryResults) => {
+    exists = queryResults
+    if(exists == 1)
+      res.redirect(`/user/${userName}`)
+    else if(exists == 0)
+      
+  })
   try {
+
     // verify login info
     // check if user exists
     // if not, deny login saying user does not exist
     // if username is correct, but passwor is not, deny entry
     //    - redirect back to login page
     //    - show message saying incorrect password
-    if(req.query.userName != "Erdman"){
-      throw 200
-    }
   } catch (e) {
     res.redirect('/login')
   }
-  res.redirect('/')
+})
+
+app.get('/user/:userName', (req, res) => {
+
+  res.render('userPage.pug')
 })
 
 app.get('/signup', (req, res) => {
@@ -130,13 +141,6 @@ app.listen(() => {
   return server.listen.apply(server)
 });
 */
-app.get('/movie', (req, res) => {
-  res.render('moviePage.pug')
-})
-
-app.get('/user', (req, res) => {
-  res.render('userPage.pug')
-})
 
 app.listen(PORT, () => {
   console.log(`App running on localhost:${PORT}`);
