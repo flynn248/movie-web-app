@@ -104,7 +104,11 @@ app.get('/login/verify', (req, res) => {
     if(exists == 1)
       res.redirect(`/user/${userName}`)
     else if(exists == 0)
-      
+      res.redirect("/login")
+    else{
+      console.log("ERROR: User Account Quantity Invalid!")
+      res.redirect("/login")
+    }
   })
   try {
 
