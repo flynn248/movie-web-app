@@ -4,14 +4,14 @@ const db = database.db
 const getMovieFromSearch = (type, param) => {
     return new Promise((resolve,reject) => {
         if (type == 'title')
-            sql = `SELECT movieID, title FROM TestMovie WHERE title LIKE '%${param}%';`;
+            sql = `SELECT DISTINCT movieID, title FROM Movie WHERE title LIKE '%${param}%';`;
         else if (type == 'genre')
-            sql = `SELECT DISTINCT movieID, genere FROM testM WHERE genere LIKE '%${param}%'`
+            sql = `SELECT DISTINCT movieID, genre FROM  WHERE genere LIKE '%${param}%'`
         else if (type == 'director')
             sql = ``
         else if (type == 'actor')
             sql = ``
-        else if (type == 'location')
+        else if (type == 'location') 
             sql = ``
         else if (type == 'rating_gt')
             sql = ``
@@ -49,15 +49,36 @@ const getMovieFromSearch = (type, param) => {
     })
 }
 
-const GetMovieDetails = async (id) => {
+const getMovieDetails = async (ID) => {
     return new Promise((resolve,reject) => {
         sql = `
-            
+            SELECT DISTINCT m.title, m.imbdID, m.year, m.country, m.rtID, m.rtAllCriticsRating, m.rtAllCriticsNumReviews, 
+                m.rtTopCriticsRating, m.rtTopCriticsNumReviews, m.rtAudienceRating, m.rtAudienceNumReviews, m.rtPicURL,
+                a.aName, d.dName,
+                l.country, l.state, l.city, l.location
+            FROM Movie AS m
+            INNER JOIN Actor AS a
+            INNER JOIN Acted AS aJ
+            INNER JOIN Director AS d
+            INNER JOIN Directed AS dJ
+            INNER JOIN Location AS l
+            INNER JOIN Filmed AS lJ
+            ON aJ.movieID = ${ID} AND aJ.actorID = a.actorID AND
+                dJ.movieID = ${ID} AND dJ.directorID = d.directorID AND
+                lJ.movieID = ${ID} AND lJ.locationID = l.locationID AND
+                m.movieID = ${ID}
         `
         const rows = new Promise((rslv, rjct) => db.query(sql, (e, result) => {
-            if (e) throw e
+            if (e) 
+                throw e
+            
+            console.log(result)
+
             if(result.length != 0){
                 Title = result[0].title
+                ImbdID = result[0].imbdID
+                Year = result[0].year
+
                 Rating = result[0].rtAllCriticsRating
                 Dir = result[0].directorName
                 actors = []
@@ -107,5 +128,34 @@ const GetMovieDetails = async (id) => {
 
 module.exports = {
     getMovieFromSearch: getMovieFromSearch,
-    GetMovieDetails: GetMovieDetails
+    getMovieDetails: getMovieDetails
 }
+
+/*
+        sql = `
+            SELECT DISTINCT m.title, m.imbdID, m.year, m.country, m.rtID, m.rtAllCriticsRating, m.rtAllCriticsNumReviews, 
+                m.rtTopCriticsRating, m.rtTopCriticsNumReviews, m.rtAudienceRating, m.rtAudienceNumReviews, m.rtPicURL,
+                a.aName, d.dName, c.txt, u.rating, g.genre, g.description,
+                l.country, l.state, l.city, l.location
+            FROM Movie AS m
+            INNER JOIN Actor AS a
+            INNER JOIN Acted AS aJ
+            INNER JOIN Director AS d
+            INNER JOIN Directed AS dJ
+            INNER JOIN Comment AS c
+            INNER JOIN HaveCom AS cJ
+            INNER JOIN UserRating AS u
+            INNER JOIN HaveRating AS uJ
+            INNER JOIN Location AS l
+            INNER JOIN Filmed AS lJ
+            INNER JOIN Genre AS g
+            INNER JOIN Classified AS gJ
+            ON aJ.movieID = ${ID} AND aJ.actorID = a.actorID AND
+                dJ.movieID = ${ID} AND dJ.directorID = d.directorID AND
+                cJ.movieID = ${ID} AND cJ.commentID = c.commentID AND
+                uJ.movieID = ${ID} AND uJ.ratingID = u.ratingID AND
+                lJ.movieID = ${ID} AND lJ.locationID = l.locationID AND
+                gJ.movieID = ${ID} AND gJ.genre = g.genre AND
+                m.movieID = ${ID}
+        `
+*/

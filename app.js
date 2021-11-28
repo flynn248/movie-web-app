@@ -67,8 +67,8 @@ app.get('/Results', (req, res) => {
 })
 
 app.get('/movie/:movieID', (req, res) =>{
-  console.log("Hello")
   movieID = req.params['movieID']
+  Search.getMovieDetails(movieID)
   res.send(`${movieID}`)
 })
 
