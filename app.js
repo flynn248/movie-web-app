@@ -14,7 +14,8 @@ var connectLiveReload = require("connect-livereload")
 const Search = require(__dirname + '/functions/search.js')
 const express = require('express');
 const app = express();
-const path = require('path')
+const path = require('path');
+const { query } = require('express');
 
 app.use(connectLiveReload())
 
@@ -68,8 +69,27 @@ app.get('/Results', (req, res) => {
 
 app.get('/movie/:movieID', (req, res) =>{
   movieID = req.params['movieID']
-  Search.getMovieDetails(movieID)
-  res.send(`${movieID}`)
+  Search.getMovieDetails(movieID).then((queryResults) => {
+    try{
+      Result = queryResults
+      console.log(Result.actors)
+      Result.actors.forEach(element => {
+        console.log(element)
+      })
+      res.render('eeHeader.pug', Result)
+    }
+    catch (err){
+      ErrMsg = {
+        message: "Failed to retrieve movie details"
+      }
+      res.render('moviePage.pug', Result)
+    }
+  }).catch(e => {
+    ErrMsg = {
+      message: "Failed to retrieve movie details"
+    }
+    res.render('errorScreen.pug', ErrMsg)
+  })
 })
 
 app.get('/login', (req, res) => {
