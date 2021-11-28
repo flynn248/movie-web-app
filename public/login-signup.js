@@ -8,3 +8,4 @@ function Toggle() {
         temp.type = "password"
     }
 }
+

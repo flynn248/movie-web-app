@@ -103,24 +103,13 @@ app.get('/login/verify', (req, res) => {
     exists = queryResults
     if(exists == 1)
       res.redirect(`/user/${userName}`)
-    else if(exists == 0)
+    else if(exists == 0) // TODO: Add a pop up saying invlaid username. Pass a value that can be used for that
       res.redirect("/login")
     else{
       console.log("ERROR: User Account Quantity Invalid!")
       res.redirect("/login")
     }
   })
-  try {
-
-    // verify login info
-    // check if user exists
-    // if not, deny login saying user does not exist
-    // if username is correct, but passwor is not, deny entry
-    //    - redirect back to login page
-    //    - show message saying incorrect password
-  } catch (e) {
-    res.redirect('/login')
-  }
 })
 
 app.get('/user/:userName', (req, res) => {

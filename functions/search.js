@@ -158,12 +158,12 @@ const getUserProfile = async uN => {
                             m.title, c.txt, 
                             hC.movieID AS comMovieID
             FROM User AS u
-            LEFT OUTER JOIN Favorites AS f ON f.userName = ${uN}
+            LEFT OUTER JOIN Favorites AS f ON f.userName = '${uN}'
             LEFT OUTER JOIN Movie AS m ON f.movieID = m.movieID
-            LEFT OUTER JOIN MakeCom AS mC ON mC.userName = ${uN}
+            LEFT OUTER JOIN MakeCom AS mC ON mC.userName = '${uN}'
             LEFT OUTER JOIN Comment AS c ON mC.commentID = c.commentID
             LEFT OUTER JOIN HaveCom AS hC ON c.commentID = hC.commentID
-            WHERE u.userName = ${uN}
+            WHERE u.userName = '${uN}'
         `
         const profile = new Promise((rslv, rjct) => db.query(sql, (e, result) => {
             if (e) 
@@ -213,9 +213,9 @@ const getUserProfile = async uN => {
 const verifyUserProfile = async (UN, PWD) => {
     return new Promise((resolve, reject) => {
         sql = `
-            SELECT COUNT(DISTINCT ${UN})
+            SELECT COUNT(DISTINCT userName) AS count
             FROM User
-            WHERE userName = ${UN} AND pwd = ${PWD}
+            WHERE userName = '${UN}' AND pwd = '${PWD}'
         `
 
         const exists = new Promise((rslv, rjct) => db.query(sql, (e, result) => {
