@@ -113,7 +113,8 @@ app.get('/login/verify', (req, res) => {
 })
 
 app.get('/user/:userName', (req, res) => {
-
+  userName = req.params['userName']
+  Search.getUserProfile()
   res.render('userPage.pug')
 })
 

@@ -178,7 +178,7 @@ const getUserProfile = async uN => {
                 favTitles = []
                 comments = []
                 comMovieID = []
-
+                
                 result.forEach(element => {
                     if(!favMovieID.includes(element.favMovieID))
                         favMovieID.push(element.favMovieID)
