@@ -114,8 +114,11 @@ app.get('/login/verify', (req, res) => {
 
 app.get('/user/:userName', (req, res) => {
   userName = req.params['userName']
-  Search.getUserProfile()
-  res.render('userPage.pug')
+  Search.getUserProfile(userName).then((queryResults) => {
+    Result = queryResults
+
+    res.render('userPage.pug', Result)
+  })
 })
 
 app.get('/signup', (req, res) => {

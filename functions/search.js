@@ -155,85 +155,88 @@ const getUserProfile = async uN => {
         sql = `
             SELECT DISTINCT u.userName, 
                             f.movieID AS favMovieID, 
-                            m.title, c.txt, 
-                            hC.movieID AS comMovieID
+                            m.title
             FROM User AS u
-            LEFT OUTER JOIN Favorites AS f ON f.userName = '${uN}'
+            LEFT OUTER JOIN Favorites AS f ON f.userName = 'Erdman'
             LEFT OUTER JOIN Movie AS m ON f.movieID = m.movieID
-            LEFT OUTER JOIN MakeCom AS mC ON mC.userName = '${uN}'
-            LEFT OUTER JOIN Comment AS c ON mC.commentID = c.commentID
-            LEFT OUTER JOIN HaveCom AS hC ON c.commentID = hC.commentID
-            WHERE u.userName = '${uN}'
-        `
-        const profile = new Promise((rslv, rjct) => db.query(sql, (e, result) => {
-            if (e) 
-                throw e
-            
-            if(result.length != 0){
-                obj = {
-                    userName: result[0].userName
-                }
-
-                favMovieID = []
-                favTitles = []
-                comments = []
-                comMovieID = []
+            WHERE u.userName = 'Erdman'
+            `
+            const userFavMovies = new Promise((rslv, rjct) => db.query(sql, (e, result) => {
+                if (e) 
+                    throw e
                 
-                result.forEach(element => {
-                    if(!favMovieID.includes(element.favMovieID))
-                        favMovieID.push(element.favMovieID)
-                    if(!favTitles.includes(element.title))
-                        favTitles.push(element.title)
-                    if(!comments.includes(element.txt))
-                        comments.push(element.txt)
-                    if(!ratings.includes(element.rating))
-                        comMovieID.push(element.rating)
-                })
+                if(result.length != 0){
+                    obj = {
+                        userName: result[0].userName
+                    }
+                    favMovie = []
 
-                obj['favMovieID'] = favMovieID
-                obj['favTitles'] = favTitles
-                obj['comments'] = comments
-                obj['comMovieID'] = comMovieID
-                console.log(obj)
-                rslv(obj)
-            }
-            obj = {
-                userName: '',
-                favMovieID: [],
-                favTitles: [],
-                comments: [],
-                comMovieID: []
-            }
-            rjct(obj)
-        }))
-        resolve(profile)
-    })
-}
-
-const verifyUserProfile = async (UN, PWD) => {
-    return new Promise((resolve, reject) => {
-        sql = `
+                    result.forEach(element => {
+                        movie = {
+                            favMovieID: element.favMovieID,
+                            favMovieTitle: element.title
+                        }
+                        if(!favMovie.includes(movie)){
+                            favMovie.push(movie)
+                            console.log(movie)
+                        }
+                    })
+                    
+                    obj['favMovie'] = favMovie
+                    console.log(obj)
+                    rslv(obj)
+                }
+                obj = {
+                    userName: '',
+                    favMovie: [{
+                        favMovieID: null,
+                        favMovieTitle: ''
+                    }]
+                }
+                rjct(obj)
+            }))
+            resolve(userFavMovies)
+        })
+    }
+    
+    const verifyUserProfile = async (UN, PWD) => {
+        return new Promise((resolve, reject) => {
+            sql = `
             SELECT COUNT(DISTINCT userName) AS count
             FROM User
             WHERE userName = '${UN}' AND pwd = '${PWD}'
-        `
-
-        const exists = new Promise((rslv, rjct) => db.query(sql, (e, result) => {
-            count = result[0].count
-            if(count == 0)
+            `
+            
+            const exists = new Promise((rslv, rjct) => db.query(sql, (e, result) => {
+                count = result[0].count
+                if(count == 0)
                 rslv(0)
-            else if(count == 1)
+                else if(count == 1)
                 rslv(1)
-            else
+                else
                 rjct(-1)
-        }))
-        resolve(exists)
-    })
-}
-
-module.exports = {
-    getMovieFromSearch: getMovieFromSearch,
-    getMovieDetails: getMovieDetails,
-    getUserProfile: getUserProfile,
-    verifyUserProfile: verifyUserProfile
-}
+            }))
+            resolve(exists)
+        })
+    }
+    
+    module.exports = {
+        getMovieFromSearch: getMovieFromSearch,
+        getMovieDetails: getMovieDetails,
+        getUserProfile: getUserProfile,
+        verifyUserProfile: verifyUserProfile
+    }
+    
+    // OUTER JOIN MakeCom AS mC ON mC.userName = '${uN}'
+    // OUTER JOIN Comment AS c ON mC.commentID = c.commentID
+    // OUTER JOIN HaveCom AS hC ON c.commentID = hC.commentID
+    // comments = []
+    // comMovieID = []
+    // if(!comments.includes(element.txt))
+    // comments.push(element.txt)
+    // if(!ratings.includes(element.rating))
+    // comMovieID.push(element.rating)
+    // comments: [],
+    // comMovieID: []
+    // obj['comments'] = comments
+    // obj['comMovieID'] = comMovieID

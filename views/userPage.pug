@@ -17,6 +17,9 @@ html
                 h4
                 <!--when we eed future stuff to go under the favorites line its in the line below this-->
                 a(id="favorite-title") Favorites: 
+                    each item in Result.favMovie
+                        a(href=`/movie/${item.favMovieID}`)
+                            ul=item.favMovieTitle
                     
 
         
