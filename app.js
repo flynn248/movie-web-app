@@ -13,10 +13,11 @@ var connectLiveReload = require("connect-livereload")
 
 const Search = require(__dirname + '/functions/search.js')
 const User = require(__dirname + '/functions/login.js')
+const StoredProcedure = require(__dirname + '/functions/storedProcedure.js')
 const express = require('express');
 const app = express();
 const path = require('path');
-const { query } = require('express');
+const { ucs2 } = require('punycode');
 
 app.use(connectLiveReload())
 
@@ -29,7 +30,17 @@ const PORT = process.env.PORT || 9090
 
 // Go to localhost:9090 in your browser while the program is running
 app.get('/', (req, res) => {
-  res.render('search.pug');
+  Result = {}
+  StoredProcedure.getMovieCount().then((movieCount) => {
+    Result['movieCount'] = movieCount
+    StoredProcedure.getCommentCount().then((comCount) => {
+      Result['comCount'] = comCount
+      StoredProcedure.getUserCount().then((uCount) => {
+        Result['userCount'] = uCount
+        res.render('search.pug', Result);
+      })
+    })
+  })
 })
 
 app.get('/Results', (req, res) => {
@@ -82,7 +93,7 @@ app.get('/login', (req, res) => {
 app.get('/login/verify', (req, res) => {
   userName = req.query.userName
   pwd = req.query.password
-  User.verifyUserProfile(userName, pwd).then((queryResults) => {
+  User.verifyUserLogin(userName, pwd).then((queryResults) => {
     exists = queryResults
     if(exists == 1)
       res.redirect(`/user/${userName}`)
@@ -109,7 +120,25 @@ app.get('/signup', (req, res) => {
 })
 
 app.get('/signup/process', (req, res) => {
-  res.send(req.query.password)
+  userName = req.query.userName
+  pwd = req.query.password
+  User.checkIfUserExists(userName).then((queryResults) => {
+    exists = queryResults
+    if(exists == 1) // TODO: Add a pop up saying user exists already. Pass a value that can be used for that
+      res.render('errorScreen.pug', ErrMsg = {message: "Account already exists :/"})
+    else if(exists == 0){
+      User.addNewUser(userName, pwd).then((queryResults) => {
+        success = queryResults
+        if(!success)
+          res.render('errorScreen.pug', ErrMsg = {message: "Failed to create account :/"})
+      })
+      res.redirect("/")
+    }
+    else{
+      console.log("ERROR: User Account Quantity Invalid!")
+      res.redirect("/login")
+    }
+  })
 })
 // Starts an http server on the $PORT environment variable
 /*
