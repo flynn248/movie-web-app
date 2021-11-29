@@ -15,4 +15,4 @@ html
         h3
             each item in Result.movies
                 a(href=`movie/${item.id}`)
-                    li=item.title
+                    li(class='result')=item.title

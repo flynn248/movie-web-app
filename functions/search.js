@@ -4,19 +4,19 @@ const db = database.db
 const getMovieFromSearch = (type, param) => {
     return new Promise((resolve,reject) => {
         if (type == 'title')
-            sql = `SELECT DISTINCT movieID, title FROM Movie WHERE title LIKE '%${param}%';`;
+            sql = `SELECT DISTINCT movieID, title FROM Movie WHERE title LIKE '%${param}%' GROUP BY title ORDER BY title`;
         else if (type == 'genre')
-            sql = `SELECT DISTINCT movieID, genre FROM  WHERE genere LIKE '%${param}%'`
+            sql = `SELECT DISTINCT m.movieID, m.title FROM Movie m, Classified c WHERE c.genre LIKE '%${param}%' AND c.movieID = m.movieID GROUP BY m.title ORDER BY m.title`
         else if (type == 'director')
-            sql = ``
+            sql = `SELECT DISTINCT m.movieID, m.title FROM Movie m, Director d, Directed dJ WHERE d.dName LIKE '%${param}%' AND d.directorID = dJ.directorID AND dJ.movieID = m.movieID GROUP BY m.title ORDER BY m.title`
         else if (type == 'actor')
-            sql = ``
+            sql = `SELECT DISTINCT m.movieID, m.title FROM Movie m, Actor a, Acted aJ WHERE a.aName LIKE '%${param}%' AND a.actorID = aJ.actorID AND aJ.movieID = m.movieID GROUP BY m.title ORDER BY m.title`
         else if (type == 'location') 
-            sql = ``
+            sql = `SELECT DISTINCT m.movieID, m.title FROM Movie m, Location l, Filmed f WHERE l.country LIKE '%${param}%' OR l.state LIKE '%${param}%' OR l.city LIKE '%${param}%' OR l.location LIKE '%${param}%' AND l.locationID = f.locationID AND f.movieID = m.movieID GROUP BY m.title ORDER BY m.title`
         else if (type == 'rating_gt')
-            sql = ``
+            sql = `SELECT DISTINCT movieID, title FROM Movie WHERE (rtAudienceRating * 2 + rtTopCriticsRating + rtAllCriticsRating)/3 >= ${param} GROUP BY title ORDER BY title`
         else if (type == 'rating_ls')
-            sql = ``
+            sql = `SELECT DISTINCT movieID, title FROM Movie WHERE (rtAudienceRating * 2 + rtTopCriticsRating + rtAllCriticsRating)/3 <= ${param} GROUP BY title ORDER BY title`
         
         try{
             movie_results = new Array()
