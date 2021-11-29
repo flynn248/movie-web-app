@@ -1,8 +1,44 @@
 const database = require('./database.js')
 const db = database.db
 
+const addNewUser = async (UN, PWD) => {
+    return new Promise((resolve, reject) => {
+        sql = `
+        INSERT INTO User VALUES('${UN}', '${PWD}')
+        `
+        db.query(sql, (e, result) => {
+            if(e) 
+                throw e
+            resolve(true)
+        })
+    })
+}
+
+const checkIfUserExists = async (UN) => {
+    return new Promise((resolve, reject) => {
+        sql = `
+        SELECT COUNT(DISTINCT userName) AS count
+        FROM User
+        WHERE userName = '${UN}'
+        `
+        
+        const exists = new Promise((rslv, rjct) => db.query(sql, (e, result) => {
+            if(e) 
+                throw e
+            count = result[0].count
+            if(count == 0)
+                rslv(0)
+            else if(count == 1)
+                rslv(1)
+            else
+                rjct(-1)
+        }))
+        resolve(exists)
+    })
+}
+
 // Verify the input of the Username and Password
-const verifyUserProfile = async (UN, PWD) => {
+const verifyUserLogin = async (UN, PWD) => {
     return new Promise((resolve, reject) => {
         sql = `
         SELECT COUNT(DISTINCT userName) AS count
@@ -128,5 +164,7 @@ const queryComments = async (uN, userDetails) => {
 
 module.exports = {
     getUserProfile: getUserProfile,
-    verifyUserProfile: verifyUserProfile
+    verifyUserLogin: verifyUserLogin,
+    checkIfUserExists: checkIfUserExists,
+    addNewUser: addNewUser
 }
