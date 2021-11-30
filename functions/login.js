@@ -14,6 +14,19 @@ const addNewUser = async (UN, PWD) => {
     })
 }
 
+const removeUser = async (UN) => {
+    return new Promise((resolve, reject) => {
+        sql = `
+        DELETE FROM User WHERE userName LIKE '${UN}'
+        `
+        db.query(sql, (e, result) => {
+            if(e) 
+                throw e
+            resolve(true)
+        })
+    })
+}
+
 const checkIfUserExists = async (UN) => {
     return new Promise((resolve, reject) => {
         sql = `
@@ -164,5 +177,6 @@ module.exports = {
     getUserProfile: getUserProfile,
     verifyUserLogin: verifyUserLogin,
     checkIfUserExists: checkIfUserExists,
-    addNewUser: addNewUser
+    addNewUser: addNewUser,
+    removeUser: removeUser
 }

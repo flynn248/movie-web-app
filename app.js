@@ -177,6 +177,22 @@ app.get('/signup/process', (req, res) => {
     }
   })
 })
+
+app.get('/user/delete', (req, res) => {
+  userName = req.cookie.userName
+  User.removeUser(userName).then(User.checkIfUserExists().then((queryResults) => {
+    exists = queryResults
+    if(exists == 0) // TODO: Add a pop up saying user exists already. Pass a value that can be used for that
+      res.render('errorScreen.pug', ErrMsg = {message: "Unknown error processing your account deletion."})
+    else if(exists == 1){
+      res.redirect("/")
+    }
+    else{
+      console.log("ERROR: User Account Quantity Invalid!")
+      res.redirect("/login")
+    }
+  }))
+})
 // Starts an http server on the $PORT environment variable
 /*
 var http = require('http')
