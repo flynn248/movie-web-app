@@ -15,7 +15,13 @@ html
         button(type="submit") Favorite
         img(src=`${Result.imgURL}`)
 
-        h3 Comments:
+        h5 Comments:
+                    each comm in Result.comments
+                        if comm != null
+                            ol 
+                                h4=comm
+                        else 
+                            h6 No comments are commented
         h3 Rating: 
          each rating in Result.ratings
                 if rating != null
@@ -62,7 +68,7 @@ html
             each actor in Result.actors
                 if actor != null
                     ol
-                        h4=actors
+                        h4=actor
                 else
                     h4 No Actors Listed
         h3 Rotten Tomatoes Audience Reviews:
