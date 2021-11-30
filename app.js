@@ -169,7 +169,7 @@ app.get('/signup/process', (req, res) => {
         if(!success)
           res.render('errorScreen.pug', ErrMsg = {message: "Failed to create account :/"})
       })
-      res.redirect("/")
+      res.redirect(`/user/${userName}`)
     }
     else{
       console.log("ERROR: User Account Quantity Invalid!")
