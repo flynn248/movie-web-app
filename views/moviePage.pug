@@ -10,30 +10,30 @@ html
     body
         .header
             include header.pug 
-        h2=Result.title //specific movie title
-        button(type="submit") Favorite
-        img(src=`${Result.imgURL}`)
-        h3 Genre:
-        h3 Location:
-        h3 Country Released: Results.country
-        h3 Year Released: Results.year
-        h3 Director/s:
-        ol
-            h3
-                each item in Result.directors
-                    a(href=`director/${item.id}`)
-                        li=item.name
-        h3 Actors: 
-        ol
-            h3
-                each item in Result.actors
-                    a(href=`actor/${item.id}`)
-                        li=item.name
-        h3 Number of Rotten Tomatoes Audience Reviews: Results.audNumRev
-        h3 Rotten Tomatoes Audience Rating: Results.audRat
-        h3 Number of Rotten Tomatoes Top Critic Reviews: Results.topNumRev
-        h3 Rotten Tomatoes Top Critic Rating: Results.topRat
-        h3 Number of Rotten Tomatoes All Critic Reviews: Results.allNumRev
-        h3 Rotten Tomatoes All Critic Rating: Results.allRat
-        input(type="text" name="param" placeholder="Search Parameters" style="padding-left:20px; width: 30%;") //comment box
-        button(type="submit") Create Comment    
+    h2 Result.title //specific movie title
+    button(type="submit") Favorite //Favorite
+    img Result.imgURL //specific movie image
+    h3 Genre:
+    h3 Location:
+    h3 Country Released: Results.country
+    h3 Year Released: Results.year
+    h3 Director/s:
+    ol
+        h3
+            each item in Result.directors
+                a(href=`director/${item.id}`)
+                    li=item.name
+    h3 Actors: 
+    ol
+        h3
+            each item in Result.actors
+                a(href=`actor/${item.id}`)
+                    li=item.name
+    h3 Number of Rotten Tomatoes Audience Reviews: Results.audNumRev
+    h3 Rotten Tomatoes Audience Rating: Results.audRat
+    h3 Number of Rotten Tomatoes Top Critic Reviews: Results.topNumRev
+    h3 Rotten Tomatoes Top Critic Rating: Results.topRat
+    h3 Number of Rotten Tomatoes All Critic Reviews: Results.allNumRev
+    h3 Rotten Tomatoes All Critic Rating: Results.allRat
+    input(type="text" name="param" placeholder="Search Parameters" style="padding-left:20px; width: 30%;") //comment box
+    button(type="submit") Create Comment    

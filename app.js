@@ -87,13 +87,13 @@ app.get('/movie/:movieID', (req, res) =>{
       Result.actors.forEach(element => {
         console.log(element)
       })
-      res.render('moviePage.pug', Result)
+      res.render('eeHeader.pug', Result)
     }
     catch (err){
       ErrMsg = {
         message: "Failed to retrieve movie details"
       }
-      res.render('errorScreen.pug', ErrMsg)
+      res.render('moviePage.pug', Result)
     }
   }).catch(e => {
     ErrMsg = {
@@ -147,7 +147,6 @@ app.get('/user/:userName', (req, res) => {
   userName = req.params['userName']
   User.getUserProfile(userName).then((queryResults) => {
     Result = queryResults
-    console.log(Result)
     res.render('userPage.pug', Result)
   })
 })
