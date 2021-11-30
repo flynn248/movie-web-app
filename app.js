@@ -12,6 +12,7 @@ server.server.once("connection", () => {
 var connectLiveReload = require("connect-livereload")
 
 const Search = require(__dirname + '/functions/search.js')
+const User = require(__dirname + '/functions/login.js')
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -29,25 +30,7 @@ const PORT = process.env.PORT || 9090
 // Go to localhost:9090 in your browser while the program is running
 app.get('/', (req, res) => {
   res.render('search.pug');
-/*
-  const database = require('./functions/database')
-  db = database.db
-
-  sql = `SELECT * FROM testM WHERE movieID=2`
-
-  db.query(sql, (err, result) => {
-      if(err) throw err
-      result.forEach(element => {
-          obj = {
-          title: element.movieID,
-          id: element.genere
-        }
-        console.log(obj);
-      });
-
-  });
-*/
-});
+})
 
 app.get('/Results', (req, res) => {
   searchInput = req.query.param
@@ -99,7 +82,7 @@ app.get('/login', (req, res) => {
 app.get('/login/verify', (req, res) => {
   userName = req.query.userName
   pwd = req.query.password
-  Search.verifyUserProfile(userName, pwd).then((queryResults) => {
+  User.verifyUserProfile(userName, pwd).then((queryResults) => {
     exists = queryResults
     if(exists == 1)
       res.redirect(`/user/${userName}`)
@@ -114,8 +97,11 @@ app.get('/login/verify', (req, res) => {
 
 app.get('/user/:userName', (req, res) => {
   userName = req.params['userName']
-  Search.getUserProfile()
-  res.render('userPage.pug')
+  User.getUserProfile(userName).then((queryResults) => {
+    Result = queryResults
+    console.log(Result)
+    res.render('userPage.pug', Result)
+  })
 })
 
 app.get('/signup', (req, res) => {

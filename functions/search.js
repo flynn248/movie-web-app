@@ -4,19 +4,19 @@ const db = database.db
 const getMovieFromSearch = (type, param) => {
     return new Promise((resolve,reject) => {
         if (type == 'title')
-            sql = `SELECT DISTINCT movieID, title FROM Movie WHERE title LIKE '%${param}%';`;
+            sql = `SELECT DISTINCT movieID, title FROM Movie WHERE title LIKE '%${param}%' GROUP BY title ORDER BY title`;
         else if (type == 'genre')
-            sql = `SELECT DISTINCT movieID, genre FROM  WHERE genere LIKE '%${param}%'`
+            sql = `SELECT DISTINCT m.movieID, m.title FROM Movie m, Classified c WHERE c.genre LIKE '%${param}%' AND c.movieID = m.movieID GROUP BY m.title ORDER BY m.title`
         else if (type == 'director')
-            sql = ``
+            sql = `SELECT DISTINCT m.movieID, m.title FROM Movie m, Director d, Directed dJ WHERE d.dName LIKE '%${param}%' AND d.directorID = dJ.directorID AND dJ.movieID = m.movieID GROUP BY m.title ORDER BY m.title`
         else if (type == 'actor')
-            sql = ``
+            sql = `SELECT DISTINCT m.movieID, m.title FROM Movie m, Actor a, Acted aJ WHERE a.aName LIKE '%${param}%' AND a.actorID = aJ.actorID AND aJ.movieID = m.movieID GROUP BY m.title ORDER BY m.title`
         else if (type == 'location') 
-            sql = ``
+            sql = `SELECT DISTINCT m.movieID, m.title FROM Movie m, Location l, Filmed f WHERE l.country LIKE '%${param}%' OR l.state LIKE '%${param}%' OR l.city LIKE '%${param}%' OR l.location LIKE '%${param}%' AND l.locationID = f.locationID AND f.movieID = m.movieID GROUP BY m.title ORDER BY m.title`
         else if (type == 'rating_gt')
-            sql = ``
+            sql = `SELECT DISTINCT movieID, title FROM Movie WHERE (rtAudienceRating * 2 + rtTopCriticsRating + rtAllCriticsRating)/3 >= ${param} GROUP BY title ORDER BY title`
         else if (type == 'rating_ls')
-            sql = ``
+            sql = `SELECT DISTINCT movieID, title FROM Movie WHERE (rtAudienceRating * 2 + rtTopCriticsRating + rtAllCriticsRating)/3 <= ${param} GROUP BY title ORDER BY title`
         
         try{
             movie_results = new Array()
@@ -117,7 +117,6 @@ const getMovieDetails = async (ID) => {
                 obj['genres'] = genres
                 obj['comments'] = comments
                 obj['ratings'] = ratings
-                console.log(obj)
                 rslv(obj)
             }
             obj = {
@@ -149,91 +148,8 @@ const getMovieDetails = async (ID) => {
         resolve(movie)
     })
 }
-
-const getUserProfile = async uN => {
-    return new Promise((resolve, reject) => {
-        sql = `
-            SELECT DISTINCT u.userName, 
-                            f.movieID AS favMovieID, 
-                            m.title, c.txt, 
-                            hC.movieID AS comMovieID
-            FROM User AS u
-            LEFT OUTER JOIN Favorites AS f ON f.userName = '${uN}'
-            LEFT OUTER JOIN Movie AS m ON f.movieID = m.movieID
-            LEFT OUTER JOIN MakeCom AS mC ON mC.userName = '${uN}'
-            LEFT OUTER JOIN Comment AS c ON mC.commentID = c.commentID
-            LEFT OUTER JOIN HaveCom AS hC ON c.commentID = hC.commentID
-            WHERE u.userName = '${uN}'
-        `
-        const profile = new Promise((rslv, rjct) => db.query(sql, (e, result) => {
-            if (e) 
-                throw e
-            
-            if(result.length != 0){
-                obj = {
-                    userName: result[0].userName
-                }
-
-                favMovieID = []
-                favTitles = []
-                comments = []
-                comMovieID = []
-                
-                result.forEach(element => {
-                    if(!favMovieID.includes(element.favMovieID))
-                        favMovieID.push(element.favMovieID)
-                    if(!favTitles.includes(element.title))
-                        favTitles.push(element.title)
-                    if(!comments.includes(element.txt))
-                        comments.push(element.txt)
-                    if(!ratings.includes(element.rating))
-                        comMovieID.push(element.rating)
-                })
-
-                obj['favMovieID'] = favMovieID
-                obj['favTitles'] = favTitles
-                obj['comments'] = comments
-                obj['comMovieID'] = comMovieID
-                console.log(obj)
-                rslv(obj)
-            }
-            obj = {
-                userName: '',
-                favMovieID: [],
-                favTitles: [],
-                comments: [],
-                comMovieID: []
-            }
-            rjct(obj)
-        }))
-        resolve(profile)
-    })
-}
-
-const verifyUserProfile = async (UN, PWD) => {
-    return new Promise((resolve, reject) => {
-        sql = `
-            SELECT COUNT(DISTINCT userName) AS count
-            FROM User
-            WHERE userName = '${UN}' AND pwd = '${PWD}'
-        `
-
-        const exists = new Promise((rslv, rjct) => db.query(sql, (e, result) => {
-            count = result[0].count
-            if(count == 0)
-                rslv(0)
-            else if(count == 1)
-                rslv(1)
-            else
-                rjct(-1)
-        }))
-        resolve(exists)
-    })
-}
-
+    
 module.exports = {
     getMovieFromSearch: getMovieFromSearch,
-    getMovieDetails: getMovieDetails,
-    getUserProfile: getUserProfile,
-    verifyUserProfile: verifyUserProfile
+    getMovieDetails: getMovieDetails
 }
