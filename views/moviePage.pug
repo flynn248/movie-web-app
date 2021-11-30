@@ -10,30 +10,97 @@ html
     body
         .header
             include header.pug 
-    h2 Result.title //specific movie title
-    button(type="submit") Favorite //Favorite
-    img Result.imgURL //specific movie image
-    h3 Genre:
-    h3 Location:
-    h3 Country Released: Results.country
-    h3 Year Released: Results.year
-    h3 Director/s:
-    ol
-        h3
-            each item in Result.directors
-                a(href=`director/${item.id}`)
-                    li=item.name
-    h3 Actors: 
-    ol
-        h3
-            each item in Result.actors
-                a(href=`actor/${item.id}`)
-                    li=item.name
-    h3 Number of Rotten Tomatoes Audience Reviews: Results.audNumRev
-    h3 Rotten Tomatoes Audience Rating: Results.audRat
-    h3 Number of Rotten Tomatoes Top Critic Reviews: Results.topNumRev
-    h3 Rotten Tomatoes Top Critic Rating: Results.topRat
-    h3 Number of Rotten Tomatoes All Critic Reviews: Results.allNumRev
-    h3 Rotten Tomatoes All Critic Rating: Results.allRat
-    input(type="text" name="param" placeholder="Search Parameters" style="padding-left:20px; width: 30%;") //comment box
-    button(type="submit") Create Comment    
+        h2 
+            a(href=`/movie/${Result.movieID}`)=Result.title
+        button(type="submit") Favorite
+        img(src=`${Result.rtPicURL}`)
+
+        h5 Comments:
+            each comm in Result.comments
+                if comm != null
+                    ol 
+                        h4=comm
+                else 
+                    h6 No comments are commented
+        h3 Rating: 
+         each rating in Result.ratings
+                if rating != null
+                    ol
+                        h4=rating
+                else
+                    h4 No Rating 
+        h3 Genre:
+            each genre in Result.genres
+                if genre != null
+                    ol
+                        h4=genre
+                else
+                    h4 No Genre
+        h3 Location:
+            if Result.locState != null 
+                h4=Result.locState
+            else
+                h4 Not listed    
+            if Result.locCity != null 
+                h4=Result.locCity
+            else
+                h4 Not listed
+            if Result.locLocal != null 
+                h4=Result.locLocal
+            else
+                h4 Not listed
+        h3 Country Released:
+            if Result.locCountry != null 
+                h4=Result.locCountry
+            else
+                h4 No country
+        h3 Year Released:
+            if Result.year != null 
+                h4=Result.year
+            else
+                h4 No year         
+        h3 Director:
+            if Result.dName != null 
+                h4=Result.dName
+            else
+                h4 No Director
+        h3 Actors:
+            each actor in Result.actors
+                if actor != null
+                    ol
+                        h4=actor
+                else
+                    h4 No Actors Listed
+        h3 Rotten Tomatoes Audience Reviews:
+            if Result.rtAudienceNumReviews != null 
+                h4=Result.rtAudienceNumReviews
+            else
+                h4 No Reviews 
+        h3 Rotten Tomatoes Audience Rating:
+            if Result.rtAudienceRating != null 
+                h4=Result.rtAudienceRating
+            else
+                h4 No Rating 
+        h3 Rotten Tomatoes Top Critic Reviews:
+            if Result.rtTopCriticsNumReviews != null 
+                h4=Result.rtTopCriticsNumReviews
+            else
+                h4 No Reviews
+        h3 Rotten Tomatoes Top Critic Rating: 
+            if Result.rtTopCriticsRating != null 
+                h4=Result.rtTopCriticsRating
+            else
+                h4 No Rating
+        h3 Rotten Tomatoes All Critic Reviews: 
+            if Result.rtAllCriticsNumReviews != null 
+                h4=Result.rtAllCriticsNumReviews
+            else
+                h4 No Reviews
+        h3 Rotten Tomatoes All Critic Rating:
+            if Result.rtAllCriticsRating != null 
+                h4=Result.rtAllCriticsRating
+            else
+                h4 No Rating
+                
+        input(type="text" name="param" placeholder="Search Parameters" style="padding-left:20px; width: 30%;")
+        button(type="submit") Create Comment    

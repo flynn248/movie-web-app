@@ -80,20 +80,17 @@ app.get('/Results', (req, res) => {
 
 app.get('/movie/:movieID', (req, res) =>{
   movieID = req.params['movieID']
+  console.log(req.originalUrl)
   Search.getMovieDetails(movieID).then((queryResults) => {
     try{
       Result = queryResults
-      console.log(Result.actors)
-      Result.actors.forEach(element => {
-        console.log(element)
-      })
-      res.render('eeHeader.pug', Result)
+      res.render('moviePage.pug', Result)
     }
     catch (err){
       ErrMsg = {
         message: "Failed to retrieve movie details"
       }
-      res.render('moviePage.pug', Result)
+      res.render('eeHeader.pug', Result)
     }
   }).catch(e => {
     ErrMsg = {
@@ -101,7 +98,7 @@ app.get('/movie/:movieID', (req, res) =>{
     }
     res.render('errorScreen.pug', ErrMsg)
   })
-})
+}) 
 
 
 app.get('/login', (req, res) => {
@@ -178,14 +175,17 @@ app.get('/signup/process', (req, res) => {
   })
 })
 
-app.get('/user/delete', (req, res) => {
-  userName = req.cookie.userName
+app.get('/delete', (req, res) => {
+  console.log("In /delete")
+  userName = req.cookies.userName
   User.removeUser(userName).then(User.checkIfUserExists().then((queryResults) => {
     exists = queryResults
-    if(exists == 0) // TODO: Add a pop up saying user exists already. Pass a value that can be used for that
-      res.render('errorScreen.pug', ErrMsg = {message: "Unknown error processing your account deletion."})
-    else if(exists == 1){
+    if(exists == 0){ // TODO: Add a pop up saying user exists already. Pass a value that can be used for that
+      console.log(`Deleted User ${userName}`)
       res.redirect("/")
+    } 
+    else if(exists == 1){
+      res.render('errorScreen.pug', ErrMsg = {message: "Unknown error processing your account deletion."})
     }
     else{
       console.log("ERROR: User Account Quantity Invalid!")

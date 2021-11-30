@@ -13,18 +13,28 @@ html
             include Userheader.pug
             h2 User Page 
             img(src="https://lh3.googleusercontent.com/E-Si_M8jyTWcAI7zhbVdghE0Z-9SFnfWYCe_0swd_jTNPi8CElt2KcNZIvJZkzTcp6yHhv9HPhVtrsd9sHN2A3M0RWOTlOFfpyZYXfLrcUqxtAKmQs1T7wDoGTPbGvR0ccxezxLGC44=w600-h315-p-k" style="width:150px;height:100px;")
-            h3(style="font size=3")=Result.userName <!--displays username-->
-                <!--when we eed future stuff to go under the favorites line its in the line below this-->
+            <!--displays username-->
+            h3(style="font size=3")=Result.userName
                 h4(id="favorite-title") Favorites:
-
-                <!--displays the favorite movies of the user--> 
                     each item in Result.favMovie
                         if item.favMovieTitle != null 
-                            a(href=`/movie/${item.favMovieID}`)=item.favMovieTitle + "     "
+                            a(class='fave-movie-title' href=`/movie/${item.favMovieID}`)=item.favMovieTitle + ","
                         else 
                             h6 No movies are favorited
+                h5(id="user-comment") Comments:
+                    each comm in Result.comment
+                        if comm.txt != null
+                            li 
+                                a(href=`/movie/${comm.comMovieID}`)=comm.txt
+                        else 
+                            h6 No comments are commented
+        div(class="Center")
+            h6(id='Delete-Account')
+                form(action="/delete" method="get" style="padding-left:100px; width: 100%")
+                    button(type="submit") Delete Account
                     
-
+    <!--line: 18 - when we eed future stuff to go under the favorites line its in the line below this-->
+    <!--line 20 -displays the favorite movies of the user-->
     <!--pretty sure this was added on line 23 but that should make the movie a link a(class="favorite-link" href='/movie/$(Result.mobieID)') Favorite-->
     <!--html translate to pug -->
     <!--//header that says user profile-->

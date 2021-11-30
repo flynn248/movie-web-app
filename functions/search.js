@@ -49,7 +49,7 @@ const getMovieFromSearch = (type, param) => {
     })
 }
 
-const getMovieDetails = async (ID) => {
+const getMovieDetails = (ID) => {
     return new Promise((resolve,reject) => {  
         sql = `
         SELECT DISTINCT m.movieID, m.title, m.imbdID, m.year, m.country, m.rtID, m.rtAllCriticsRating, m.rtAllCriticsNumReviews, 
