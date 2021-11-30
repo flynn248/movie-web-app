@@ -113,8 +113,6 @@ const getUserProfile = async uN => {
             return queryComments(uN, rejectValue)
         })
 
-
-        console.log(userFavMovies)
         resolve(userFavMovies)
     })
 }

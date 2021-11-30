@@ -7,10 +7,10 @@ html
         link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T', crossorigin='anonymous')
         link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Roboto')
         link(rel="stylesheet", href='../style.css')
-        script(src="../stuff.js") 
     body
         .header
             include header.pug
+
         div(class="Center" style="padding-left:100px; width: 100%" )
             h2 Search
             form(action="/Results" method="get" style="padding-left:100px; width: 100%")
@@ -36,3 +36,9 @@ html
             br
             h4(class="Center")=`We have ${Result.movieCount} movies to search from!!`
             h4(class="Center")=`With a total of ${Result.comCount} comments from ${Result.userCount} users!!`
+       
+        script.
+            const Result = !{jsStringify(Result)};
+        script(src="../stuff.js")
+        
+        
