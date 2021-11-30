@@ -7,15 +7,16 @@ html
         link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T', crossorigin='anonymous')
         link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Roboto')
         link(rel="stylesheet", href='../style.css')
+        link(rel="stylesheet", href='../userPage.css')
     body 
         .header
             include Userheader.pug
             h2 User Page 
-            img(src="https://lh3.googleusercontent.com/E-Si_M8jyTWcAI7zhbVdghE0Z-9SFnfWYCe_0swd_jTNPi8CElt2KcNZIvJZkzTcp6yHhv9HPhVtrsd9sHN2A3M0RWOTlOFfpyZYXfLrcUqxtAKmQs1T7wDoGTPbGvR0ccxezxLGC44=w600-h315-p-k"style="width:150px;height:100px;")
-            h3(style="font size=3")**insert username here**
+            img(src="https://lh3.googleusercontent.com/E-Si_M8jyTWcAI7zhbVdghE0Z-9SFnfWYCe_0swd_jTNPi8CElt2KcNZIvJZkzTcp6yHhv9HPhVtrsd9sHN2A3M0RWOTlOFfpyZYXfLrcUqxtAKmQs1T7wDoGTPbGvR0ccxezxLGC44=w600-h315-p-k" style="width:150px;height:100px;")
+            h3(style="font size=3")=Result.userName
                 h4
                 <!--when we eed future stuff to go under the favorites line its in the line below this-->
-                a(style="float-right:right, text-align:right; margin-left: 600px") Favorites: 
+                a(id="favorite-title") Favorites: 
                     
 
         

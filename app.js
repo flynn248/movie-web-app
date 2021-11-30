@@ -14,7 +14,8 @@ var connectLiveReload = require("connect-livereload")
 const Search = require(__dirname + '/functions/search.js')
 const express = require('express');
 const app = express();
-const path = require('path')
+const path = require('path');
+const { query } = require('express');
 
 app.use(connectLiveReload())
 
@@ -67,9 +68,28 @@ app.get('/Results', (req, res) => {
 })
 
 app.get('/movie/:movieID', (req, res) =>{
-  console.log("Hello")
   movieID = req.params['movieID']
-  res.send(`${movieID}`)
+  Search.getMovieDetails(movieID).then((queryResults) => {
+    try{
+      Result = queryResults
+      console.log(Result.actors)
+      Result.actors.forEach(element => {
+        console.log(element)
+      })
+      res.render('eeHeader.pug', Result)
+    }
+    catch (err){
+      ErrMsg = {
+        message: "Failed to retrieve movie details"
+      }
+      res.render('moviePage.pug', Result)
+    }
+  }).catch(e => {
+    ErrMsg = {
+      message: "Failed to retrieve movie details"
+    }
+    res.render('errorScreen.pug', ErrMsg)
+  })
 })
 
 app.get('/login', (req, res) => {
@@ -77,20 +97,25 @@ app.get('/login', (req, res) => {
 })
 
 app.get('/login/verify', (req, res) => {
-  try {
-    // verify login info
-    // check if user exists
-    // if not, deny login saying user does not exist
-    // if username is correct, but passwor is not, deny entry
-    //    - redirect back to login page
-    //    - show message saying incorrect password
-    if(req.query.userName != "Erdman"){
-      throw 200
+  userName = req.query.userName
+  pwd = req.query.password
+  Search.verifyUserProfile(userName, pwd).then((queryResults) => {
+    exists = queryResults
+    if(exists == 1)
+      res.redirect(`/user/${userName}`)
+    else if(exists == 0) // TODO: Add a pop up saying invlaid username. Pass a value that can be used for that
+      res.redirect("/login")
+    else{
+      console.log("ERROR: User Account Quantity Invalid!")
+      res.redirect("/login")
     }
-  } catch (e) {
-    res.redirect('/login')
-  }
-  res.redirect('/')
+  })
+})
+
+app.get('/user/:userName', (req, res) => {
+  userName = req.params['userName']
+  Search.getUserProfile()
+  res.render('userPage.pug')
 })
 
 app.get('/signup', (req, res) => {
@@ -110,13 +135,6 @@ app.listen(() => {
   return server.listen.apply(server)
 });
 */
-app.get('/movie', (req, res) => {
-  res.render('moviePage.pug')
-})
-
-app.get('/user', (req, res) => {
-  res.render('userPage.pug')
-})
 
 app.listen(PORT, () => {
   console.log(`App running on localhost:${PORT}`);
