@@ -22,8 +22,34 @@ const removeUser = async (UN) => {
         db.query(sql, (e, result) => {
             if(e) 
                 throw e
-            resolve(true)
         })
+        
+        sql = `
+        DELETE FROM Favorites WHERE userName LIKE '${UN}'
+        `
+        db.query(sql, (e, result) => {
+            if(e) 
+                throw e
+        })
+        
+        sql = `
+        DELETE FROM MakeCom WHERE userName LIKE '${UN}'
+        `
+        db.query(sql, (e, result) => {
+            if(e) 
+                throw e
+        })
+
+
+        sql = `
+        DELETE FROM MakeRating WHERE userName LIKE '${UN}'
+        `
+        db.query(sql, (e, result) => {
+            if(e) 
+                throw e
+        })
+
+        resolve(true)
     })
 }
 

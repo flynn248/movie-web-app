@@ -12,8 +12,7 @@ html
         .header
             include Userheader.pug
             h2 User Page 
-            img(src="https://lh3.googleusercontent.com/E-Si_M8jyTWcAI7zhbVdghE0Z-9SFnfWYCe_0swd_jTNPi8CElt2KcNZIvJZkzTcp6yHhv9HPhVtrsd9sHN2A3M0RWOTlOFfpyZYXfLrcUqxtAKmQs1T7wDoGTPbGvR0ccxezxLGC44=w600-h315-p-k" style="width:150px;height:100px;")
-            <!--displays username-->
+            div(class='jim-carrey')
             h3(style="font size=3")=Result.userName
                 h4(id="favorite-title") Favorites:
                     each item in Result.favMovie
