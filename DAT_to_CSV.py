@@ -4,8 +4,8 @@ from io import FileIO, TextIOWrapper
 import os
 import csv
 
-FILE_PATH = r"C:\Users\Shane\Documents\UW-Whitewater\Fall 2021\Movie Data"
-FILE_NAME = "movies.dat"
+FILE_PATH = r"C:\Users\sflyn\Documents\UW-Whitewater\Fall 2021\Database Mgmt Systems\Movie Database\Tables"
+FILE_NAME = "Movie.csv"
 
 def datFilePath() -> tuple[str, str]:
     filepath = input("Enter the directory path of the .dat file you'd like to convert: ")
@@ -70,7 +70,13 @@ def main():
 #        filePath = datFilePath()
 #    except Exception:
 #        print(f"Failed to find")
-    convertToCsv(FILE_PATH, FILE_NAME)
+#    convertToCsv(FILE_PATH, FILE_NAME)
+
+    with open(os.path.join(FILE_PATH, FILE_NAME)) as f:
+        for i, line in enumerate(f, 0):
+            print(repr(line))
+            if i == 2:
+                break
     
     print("cake")
 
