@@ -43,22 +43,22 @@ html
         h2 
             a(href=`/movie/${Result.movieID}`)=Result.title
         button(type="submit") Favorite
-        img(src=`${Result.imgURL}`)
+        img(src=`${Result.rtPicURL}`)
 
         h5 Comments:
-                    each comm in Result.comments
-                        if comm != null
-                            ol 
-                                h4=comm
-                        else 
-                            h6 No comments are commented
+            each comm in Result.comments
+                if comm != null
+                    ol 
+                        h4=comm
+                else 
+                    h6 No comments are commented
         h3 Rating: 
          each rating in Result.ratings
                 if rating != null
                     ol
                         h4=rating
                 else
-                    h4 No Rating
+                    h4 No Rating 
         h3 Genre:
             each genre in Result.genres
                 if genre != null
@@ -134,4 +134,7 @@ html
                 
         input(type="text" name="param" placeholder="Search Parameters" style="padding-left:20px; width: 30%;")
         button(type="submit") Create Comment    
+<<<<<<< HEAD
 >>>>>>> 911009d04cab3b6d8f8c83f6fb255fd248eed2f9
+=======
+>>>>>>> flynn-dev

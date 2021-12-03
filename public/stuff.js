@@ -2,6 +2,9 @@
 
 var $ = id => {return document.getElementById(id);};
 
+
+
+
 const USERNAME = Result.userName;
 headLinks = $('link')
 console.log(headLinks)
