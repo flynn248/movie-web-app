@@ -41,6 +41,7 @@ app.use('/', (req, res, next) => {
     userName: ''
   }
   userName = req.cookies.userName;
+  console.log(`In app use ${userName}`)
   if(userName != undefined && userName != 'undefined' && userName != 'delete')
     Result.userName = userName
   next();
@@ -181,9 +182,8 @@ app.get('/delete', (req, res) => {
   User.removeUser(userName).then(User.checkIfUserExists().then((queryResults) => {
     exists = queryResults
     if(exists == 0){ // TODO: Add a pop up saying user exists already. Pass a value that can be used for that
-      console.log(`Deleted User ${userName}`)
-      req.cookies.userName = undefined
-      res.redirect("/")
+      res.clearCookie('userName');
+      res.redirect("/");
     } 
     else if(exists == 1){
       res.render('errorScreen.pug', ErrMsg = {message: "Unknown error processing your account deletion."})
