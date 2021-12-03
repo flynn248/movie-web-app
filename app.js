@@ -11,14 +11,10 @@ server.server.once("connection", () => {
 
 var connectLiveReload = require("connect-livereload")
 
-<<<<<<< HEAD
-//const Search = require(__dirname + '/functions/search.js')
-=======
 const Search = require(__dirname + '/functions/search.js')
 const User = require(__dirname + '/functions/login.js')
 const StoredProcedure = require(__dirname + '/functions/storedProcedure.js')
 
->>>>>>> 911009d04cab3b6d8f8c83f6fb255fd248eed2f9
 const express = require('express');
 const jsStringify = require('js-stringify');
 const cookieParser = require('cookie-parser');
