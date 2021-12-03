@@ -39,9 +39,11 @@ a {
     float: right;
 }
 
-.floated-left{
-    width: 60%;
-    float: right;
+.result{
+    margin-left: 50px;
+    width: 30%;
+    font-size: large;
+    float: left;
 }
 
 #login {

@@ -7,18 +7,34 @@ html
         link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T', crossorigin='anonymous')
         link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Roboto')
         link(rel="stylesheet", href='../style.css')
+        link(rel="stylesheet", href='../userPage.css')
     body 
         .header
             include Userheader.pug
             h2 User Page 
-            <img src="https://lh3.googleusercontent.com/E-Si_M8jyTWcAI7zhbVdghE0Z-9SFnfWYCe_0swd_jTNPi8CElt2KcNZIvJZkzTcp6yHhv9HPhVtrsd9sHN2A3M0RWOTlOFfpyZYXfLrcUqxtAKmQs1T7wDoGTPbGvR0ccxezxLGC44=w600-h315-p-k"style="width:150px;height:100px;"/> 
-                h3 <font size="3">**insert username here**
-                    h4
-                    <!--when we eed future stuff to go under the favorites line its in the line below this-->
-                    a(style="float-right:right, text-align:right; margin-left: 600px") Favorites: 
+            img(src="https://lh3.googleusercontent.com/E-Si_M8jyTWcAI7zhbVdghE0Z-9SFnfWYCe_0swd_jTNPi8CElt2KcNZIvJZkzTcp6yHhv9HPhVtrsd9sHN2A3M0RWOTlOFfpyZYXfLrcUqxtAKmQs1T7wDoGTPbGvR0ccxezxLGC44=w600-h315-p-k" style="width:150px;height:100px;")
+            <!--displays username-->
+            h3(style="font size=3")=Result.userName
+                h4(id="favorite-title") Favorites:
+                    each item in Result.favMovie
+                        if item.favMovieTitle != null 
+                            a(class='fave-movie-title' href=`/movie/${item.favMovieID}`)=item.favMovieTitle + ","
+                        else 
+                            h6 No movies are favorited
+                h5(id="user-comment") Comments:
+                    each comm in Result.comment
+                        if comm.txt != null
+                            li 
+                                a(href=`/movie/${comm.comMovieID}`)=comm.txt
+                        else 
+                            h6 No comments are commented
+        div(class="Center")
+            h6(id='Delete-Account')
+                button(href="/user/delete") Delete Account
                     
-
-        
+    <!--line: 18 - when we eed future stuff to go under the favorites line its in the line below this-->
+    <!--line 20 -displays the favorite movies of the user-->
+    <!--pretty sure this was added on line 23 but that should make the movie a link a(class="favorite-link" href='/movie/$(Result.mobieID)') Favorite-->
     <!--html translate to pug -->
     <!--//header that says user profile-->
     <!--//favorites list-->
