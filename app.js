@@ -11,7 +11,7 @@ server.server.once("connection", () => {
 
 var connectLiveReload = require("connect-livereload")
 
-const Search = require(__dirname + '/functions/search.js')
+//const Search = require(__dirname + '/functions/search.js')
 const express = require('express');
 const app = express();
 const path = require('path')
