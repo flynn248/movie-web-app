@@ -41,7 +41,7 @@ app.use('/', (req, res, next) => {
     userName: ''
   }
   userName = req.cookies.userName;
-  if(userName != undefined && userName != 'undefined')
+  if(userName != undefined && userName != 'undefined' && userName != 'delete')
     Result.userName = userName
   next();
 })
@@ -182,6 +182,7 @@ app.get('/delete', (req, res) => {
     exists = queryResults
     if(exists == 0){ // TODO: Add a pop up saying user exists already. Pass a value that can be used for that
       console.log(`Deleted User ${userName}`)
+      req.cookies.userName = undefined
       res.redirect("/")
     } 
     else if(exists == 1){
