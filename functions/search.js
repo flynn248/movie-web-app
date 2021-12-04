@@ -74,7 +74,9 @@ const getMovieDetails = (ID) => {
         const movie = new Promise((rslv, rjct) => db.query(sql, (e, result) => {
             if (e) 
                 throw e
-            
+            console.log(result[0])
+            console.log()
+            console.log()
             if(result.length != 0){
                 obj = {
                     movieID: result[0].movieID,

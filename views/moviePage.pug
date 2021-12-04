@@ -2,7 +2,7 @@ doctype html
 html
     head
         meta(charset='utf-8')
-        title Search
+        title Movie Page
         meta(name='viewport', content='width=device-width, initial-scale=1.0')
         link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T', crossorigin='anonymous')
         link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Roboto')
@@ -12,9 +12,12 @@ html
             include header.pug 
         h2 
             a(href=`/movie/${Result.movieID}`)=Result.title
-        button(type="submit") Favorite
         img(src=`${Result.rtPicURL}`)
-
+        br
+        div(class="Center")
+            h6(id='favorite-movie')
+                form(action=`/favorite/${Result.movieID}` method="post" style="padding-left:100px; width: 100%")
+                    button(type="submit") Favorite!
         h5 Comments:
             each comm in Result.comments
                 if comm != null
@@ -104,3 +107,7 @@ html
                 
         input(type="text" name="param" placeholder="Search Parameters" style="padding-left:20px; width: 30%;")
         button(type="submit") Create Comment    
+
+        script.
+            const Result = !{jsStringify(Result)};
+        script(src="../moviePage.js")

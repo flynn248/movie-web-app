@@ -14,6 +14,7 @@ var connectLiveReload = require("connect-livereload")
 const Search = require(__dirname + '/functions/search.js')
 const User = require(__dirname + '/functions/login.js')
 const StoredProcedure = require(__dirname + '/functions/storedProcedure.js')
+const MovieFunctions = require(__dirname + '/functions/movieFunctions.js')
 
 const express = require('express');
 const jsStringify = require('js-stringify');
@@ -41,8 +42,7 @@ app.use('/', (req, res, next) => {
     userName: ''
   }
   userName = req.cookies.userName;
-  console.log(`In app use ${userName}`)
-  if(userName != undefined && userName != 'undefined' && userName != 'delete')
+  if(userName != undefined && userName != 'undefined')
     Result.userName = userName
   next();
 })
@@ -67,7 +67,7 @@ app.get('/Results', (req, res) => {
   Search.getMovieFromSearch(searchType, searchInput).then((queryResults) => {
     Result = queryResults
     if(Result.movies.length != 0){
-      console.log(Result)
+      //console.log(Result)
       res.render('result.pug', Result)
     }
     else {
@@ -81,11 +81,10 @@ app.get('/Results', (req, res) => {
 
 app.get('/movie/:movieID', (req, res) =>{
   movieID = req.params['movieID']
-  console.log(req.originalUrl)
   Search.getMovieDetails(movieID).then((queryResults) => {
     try{
       Result = queryResults
-      res.render('moviePage.pug', Result)
+      res.render('moviePage.pug', {jsStringify, Result})
     }
     catch (err){
       ErrMsg = {
@@ -177,7 +176,6 @@ app.get('/signup/process', (req, res) => {
 })
 
 app.get('/delete', (req, res) => {
-  console.log("In /delete")
   userName = req.cookies.userName
   User.removeUser(userName).then(User.checkIfUserExists().then((queryResults) => {
     exists = queryResults
@@ -194,8 +192,23 @@ app.get('/delete', (req, res) => {
     }
   }))
 })
+
+
 // Starts an http server on the $PORT environment variable
 /*
+app.post('/favorite/:movieID', (req, res) => {
+  userName = req.cookies.userName
+  movieID = req.params['movieID']
+  MovieFunctions.favoriteMovie(movieID, userName).then((result) => {
+    success = result
+    if(success){
+      console.log(`Inside post ${Result}`)
+    }
+  })
+})
+
+
+
 var http = require('http')
 http.createServer(app).listen(9090)
 app.listen(() => {
