@@ -7,6 +7,7 @@ html
         link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T', crossorigin='anonymous')
         link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Roboto')
         link(rel="stylesheet", href='../style.css')
+        link(rel="stylesheet", href='../moviePage.css')
     body
         .header
             include header.pug 
@@ -19,26 +20,23 @@ html
                 form(action=`/favorite/${Result.movieID}` method="post" style="padding-left:100px; width: 100%")
                     button(type="submit") Favorite!
         h5 Comments:
-            each comm in Result.comments
-                if comm != null
-                    ol 
-                        h4=comm
-                else 
-                    h6 No comments are commented
+            if Result.comments != 0
+                each comment in Result.comments
+                    li(class='center')=comment  
+            else
+                h4 No Comments Made
         h3 Rating: 
-         each rating in Result.ratings
-                if rating != null
-                    ol
-                        h4=rating
-                else
-                    h4 No Rating 
+            if Result.ratings != 0
+                each rating in Result.ratings
+                    li(class='center')=rating  
+            else
+                h4 No Ratings Listed
         h3 Genre:
-            each genre in Result.genres
-                if genre != null
-                    ol
-                        h4=genre
-                else
-                    h4 No Genre
+            if Result.genres != 0
+                each genre in Result.genres
+                    li(class='center')=genre  
+            else
+                h4 No genre Listed
         h3 Location:
             if Result.locState != null 
                 h4=Result.locState
@@ -68,12 +66,11 @@ html
             else
                 h4 No Director
         h3 Actors:
-            each actor in Result.actors
-                if actor != null
-                    ol
-                        h4=actor
-                else
-                    h4 No Actors Listed
+            if Result.actors != 0
+                each actor in Result.actors
+                    li(class='center')=actor  
+            else
+                h4 No Actors Listed
         h3 Rotten Tomatoes Audience Reviews:
             if Result.rtAudienceNumReviews != null 
                 h4=Result.rtAudienceNumReviews
