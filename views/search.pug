@@ -12,15 +12,20 @@ html
             include header.pug
 
         div(class="Center" style="padding-left:100px; width: 100%" )
-            h2 Search
+            h2 Search By
             form(action="/Results" method="get" style="padding-left:100px; width: 100%")
                 select(name="type") Search Type
-                    option(value="title") By Title
-                    option(value="genre") By Genre
-                    option(value="director") By Director
-                    option(value="actor") By Actor
-                    option(value="location") By Location
-                    optgroup(label="Rating ")
+                    option(value="title") Title
+                    option(value="genre") Genre
+                    option(value="director") Director
+                    option(value="actor") Actor
+                    option(value="released_country") Country Released
+                    optgroup(label="Filmed At")
+                        option(value="location_country") Country
+                        option(value="location_state") State
+                        option(value="location_city") City
+                        option(value="location_local") Local
+                    optgroup(label="Rating")
                         option(value="rating_gt") Rated Above 
                         option(value="rating_ls") Rated Below
                 input(type="text" name="param" placeholder="Search Parameters" style="padding-left:20px; width: 30%;")
@@ -39,6 +44,6 @@ html
        
         script.
             const Result = !{jsStringify(Result)};
-        script(src="../stuff.js")
+        script(src="../navBar.js")
         
         
