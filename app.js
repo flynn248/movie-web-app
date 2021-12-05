@@ -12,13 +12,14 @@ server.server.once("connection", () => {
 var connectLiveReload = require("connect-livereload")
 
 const Search = require(__dirname + '/functions/search.js')
-const User = require(__dirname + '/functions/login.js')
+const User = require(__dirname + '/functions/user.js')
 const StoredProcedure = require(__dirname + '/functions/storedProcedure.js')
 const MovieFunctions = require(__dirname + '/functions/movieFunctions.js')
 
 const express = require('express');
 const jsStringify = require('js-stringify');
 const cookieParser = require('cookie-parser');
+const bodyParser = require("body-parser");
 
 const app = express();
 const path = require('path');
@@ -26,7 +27,7 @@ const exp = require('constants');
 
 app.use(connectLiveReload());
 app.use(cookieParser());
-
+app.use(bodyParser.urlencoded({extended: false}));
 
 
 
@@ -37,24 +38,65 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const PORT = process.env.PORT || 9090
 
-app.use('/', (req, res, next) => {
-  Result = {
-    userName: ''
+const verifyUserCookie = (req, res, next) => {
+  Cookies = {
+    userName: undefined
   }
   userName = req.cookies.userName;
-  if(userName != undefined && userName != 'undefined')
-    Result.userName = userName
+  if(userName != undefined && userName != 'undefined'){
+    Cookies.userName = userName
+  }
   next();
-})
+}
+
+const verifyIfFavorite = async (req, res, next) => {
+  Fav = {
+    isFav: undefined
+  }
+  if(Cookies.userName !== undefined){
+    movieID = req.params['movieID'];
+    await User.alreadyFavorited(movieID, userName).then((isFavorited) => {
+      if(!isFavorited){
+        Fav.isFav = false;
+      }else{
+        Fav.isFav = true;
+      }
+    })
+  }
+  next();
+}
+
+const verifyIfRated = async (req, res, next) => {
+  Rate = {
+    isRated: undefined
+  }
+
+  if(Cookies.userName !== undefined){
+    movieID = req.params['movieID'];
+    await User.alreadyRated(movieID, Cookies.userName).then((isRated) => {
+      Rate.isRated = isRated;
+      if(isRated){
+        Rate.isRated = true;
+      }else{
+        Rate.isRated = false;
+      }
+    })
+  }
+  next();
+}
 
 // Go to localhost:9090 in your browser while the program is running
-app.get('/', (req, res) => {  
+app.get('/', verifyUserCookie, (req, res) => {
+  Result = {
+    userName: Cookies.userName
+  }
+
   StoredProcedure.getMovieCount().then((movieCount) => {
-    Result['movieCount'] = movieCount
+    Result['movieCount'] = movieCount;
     StoredProcedure.getCommentCount().then((comCount) => {
-      Result['comCount'] = comCount
+      Result['comCount'] = comCount;
       StoredProcedure.getUserCount().then((uCount) => {
-        Result['userCount'] = uCount
+        Result['userCount'] = uCount;
         res.render('search.pug', {jsStringify, Result});
       })
     })
@@ -67,7 +109,6 @@ app.get('/Results', (req, res) => {
   Search.getMovieFromSearch(searchType, searchInput).then((queryResults) => {
     Result = queryResults
     if(Result.movies.length != 0){
-      //console.log(Result)
       res.render('result.pug', Result)
     }
     else {
@@ -79,18 +120,20 @@ app.get('/Results', (req, res) => {
   })
 })
 
-app.get('/movie/:movieID', (req, res) =>{
-  movieID = req.params['movieID']
+app.get('/movie/:movieID', verifyUserCookie, verifyIfFavorite, (req, res) =>{
+  movieID = req.params['movieID'];
   Search.getMovieDetails(movieID).then((queryResults) => {
     try{
-      Result = queryResults
+      Result = queryResults;
+      Result['userName'] = Cookies.userName;
+      Result['isFav'] = Fav.isFav;
       res.render('moviePage.pug', {jsStringify, Result})
     }
     catch (err){
       ErrMsg = {
         message: "Failed to retrieve movie details"
       }
-      res.render('eeHeader.pug', Result)
+      res.render('errorScreen.pug', ErrMsg)
     }
   }).catch(e => {
     ErrMsg = {
@@ -126,16 +169,12 @@ app.use('/user/:userName', (req, res, next) => {
   // check if client sent cookie
   userName = req.params['userName']
   cookie = req.cookies.userName;
-  if(cookie == undefined || cookie != userName){
+  if(cookie === undefined || cookie !== userName){
     // No: Set a new cookie
-    res.cookie('userName', userName, {maxAge: 900000});
-    console.log(`Created cookie ${req.cookies.userName}`)
-  } else if(cookie == 'undefined'){
+    res.cookie('userName', userName, {maxAge: 9000000});
+  } else if(cookie === 'undefined'){
     res.clearCookie('userName');
     console.log('Slaughtered impasta cookie');
-  } else{
-    // Yes: Cookie exists
-    console.log(`Cookie ${cookie} exists`)
   }
   next();
 })
@@ -177,9 +216,8 @@ app.get('/signup/process', (req, res) => {
 
 app.get('/delete', (req, res) => {
   userName = req.cookies.userName
-  User.removeUser(userName).then(User.checkIfUserExists().then((queryResults) => {
-    exists = queryResults
-    if(exists == 0){ // TODO: Add a pop up saying user exists already. Pass a value that can be used for that
+  User.removeUser(userName).then(User.checkIfUserExists().then((exists) => {
+    if(exists == 0){ 
       res.clearCookie('userName');
       res.redirect("/");
     } 
@@ -193,31 +231,73 @@ app.get('/delete', (req, res) => {
   }))
 })
 
+app.post('/comment/:movieID', (req, res) => {
+  userName = req.cookies.userName
+  movieID = req.params['movieID']
+  txt = req.body.comments
+  if(userName === undefined || userName === 'undefined'){
+    res.redirect(`/movie/${movieID}`)
+  }else{
+    MovieFunctions.makeComment(userName, movieID, txt).then((result) => {
+      success = result;
+      if(!success){
+        res.render('errorScreen.pug', ErrMsg = {message: "Unknown error processing your comment."})
+      }
+      res.redirect(`/movie/${movieID}`)
+    })
+  }
 
-// Starts an http server on the $PORT environment variable
-/*
+})
+
 app.post('/favorite/:movieID', (req, res) => {
   userName = req.cookies.userName
   movieID = req.params['movieID']
   MovieFunctions.favoriteMovie(movieID, userName).then((result) => {
     success = result
     if(success){
-      console.log(`Inside post ${Result}`)
+      res.redirect(`/movie/${movieID}`)
+    }else{
+      res.render('errorScreen.pug', ErrMsg = {message: "Failed to add movie from favorites."})
     }
   })
 })
 
+app.post('/removeFavorite/:movieID', (req, res) => {
+  userName = req.cookies.userName;
+  movieID = req.params['movieID'];
+  MovieFunctions.removeFavoriteMovie(movieID, userName).then((success) => {
+    if(success){
+      res.redirect(`/movie/${movieID}`)
+    }else{
+      res.render('errorScreen.pug', ErrMsg = {message: "Failed to remove movie from favorites."})
+    }
+  })
+})
 
+app.post('/rate/:movieID/:rateValue', verifyIfRated, (req, res) => {
+  userName = req.cookies.userName;
+  movieID = req.params['movieID'];
+  rating = req.params['rateValue'];
 
-var http = require('http')
-http.createServer(app).listen(9090)
-app.listen(() => {
-  var server = http.createServer(this)
-  console.log(server)
-  return server.listen.apply(server)
-});
-*/
+  if(Rate.isRated === true){
+    MovieFunctions.updateRating(movieID, userName, rating).then((success) => {
+      if(success){
+        res.redirect(`/movie/${movieID}`)
+      }else{
+        res.render('errorScreen.pug', ErrMsg = {message: "Failed to rate movie."})
+      }
 
+    })
+  }else{
+    MovieFunctions.rateMovie(movieID, userName, rating).then((success) => {
+      if(success){ 
+        res.redirect(`/movie/${movieID}`)
+      }else{
+        res.render('errorScreen.pug', ErrMsg = {message: "Failed to rate movie."})
+      }
+    })
+  }
+})
 
 app.listen(PORT, () => {
   console.log(`App running on localhost:${PORT}`);
