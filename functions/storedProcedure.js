@@ -42,11 +42,42 @@ const getUserCount = () => {
     })
 }
 
+const getMaxCommentID = () => {
+    return new Promise((resolve, reject) => {
+        sql = 'CALL getMaxCommentID'
+        db.query(sql, (err, result) => {
+            if (err) throw err;
+            if(result[0][0].commentID == null){
+                resolve(0)
+            }
+            else{
+                resolve(result[0][0].commentID)
+            }
+        })
+    })
+}
+
+const getMaxRatingID = () => {
+    return new Promise((resolve, reject) => {
+        sql = 'CALL getMaxRatingID'
+        db.query(sql, (err, result) => {
+            if (err) throw err;
+            if(result[0][0].ratingID == null){
+                resolve(0)
+            }
+            else{
+                resolve(result[0][0].ratingID)
+            }
+        })
+    })
+}
 module.exports = {
     getMovieCount: getMovieCount,
     getActorCountInMovie: getActorCountInMovie,
     getCommentCount: getCommentCount,
-    getUserCount: getUserCount
+    getUserCount: getUserCount,
+    getMaxCommentID: getMaxCommentID,
+    getMaxRatingID: getMaxRatingID
 }
 /* 
 Query that is being used for getMovieCount:
@@ -98,6 +129,34 @@ Query that is being used for getUserCount:
     BEGIN
         SELECT COUNT(DISTINCT(userName)) AS count
         FROM User;
+    END $$
+
+    DELIMITER ;
+
+Query that is being used for getMaxCommentID:
+
+    DROP PROCEDURE IF EXISTS getMaxCommentID;
+
+    DELIMITER $$
+
+    CREATE PROCEDURE getMaxCommentID()
+    BEGIN
+        SELECT MAX(DISTINCT(commentID)) AS commentID 
+        FROM Comment;
+    END $$
+
+    DELIMITER ;
+
+Query that is being used for getMaxRatingID:
+
+    DROP PROCEDURE IF EXISTS getMaxRatingID;
+
+    DELIMITER $$
+
+    CREATE PROCEDURE getMaxRatingID()
+    BEGIN
+        SELECT MAX(DISTINCT(ratingID)) AS ratingID
+        FROM UserRating;
     END $$
 
     DELIMITER ;
