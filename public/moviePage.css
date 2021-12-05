@@ -1,6 +1,24 @@
-.center {
-    line-height: 1.5em;
-    height: auto;
-    display: inline-block;
-    margin:5px;
+.list {
+    display: inline;
+    font-size: large;
+    font-weight: 600;
+}
+
+.no-data {
+    font-size: large;
+    margin-left: 2%;
+}
+
+.review{
+    font-size: large;
+    margin-left: 2%;
+}
+
+h3 {
+    margin-left: 0.2%;
+}
+
+.h-data{
+    font-size: x-large;
+    margin-left: 2%;
 }

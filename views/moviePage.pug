@@ -11,100 +11,121 @@ html
     body
         .header
             include header.pug 
-        h2 
-            a(href=`/movie/${Result.movieID}`)=Result.title
-        img(src=`${Result.rtPicURL}`)
+        h1(style='text-align: center')=Result.title
+        img(src=`${Result.rtPicURL}` alt='Image not found' style='display: block; margin-left: auto; margin-right: auto; width: 15%')
         br
-        div(class="Center")
-            h6(id='favorite-movie')
-                form(action=`/favorite/${Result.movieID}` method="post" style="padding-left:100px; width: 100%")
-                    button(type="submit") Favorite!
-        h5 Comments:
-            if Result.comments != 0
-                each comment in Result.comments
-                    li(class='center')=comment  
-            else
-                h4 No Comments Made
-        h3 Rating: 
-            if Result.ratings != 0
-                each rating in Result.ratings
-                    li(class='center')=rating  
-            else
-                h4 No Ratings Listed
+
+        h3 User Average Rating:
+        if Result.userRating > 0
+            h4(class='review')=Result.userRating  
+        else
+            h4(class='no-data') No User Ratings Listed
+
         h3 Genre:
-            if Result.genres != 0
+        if Result.genres != 0
+            ul
                 each genre in Result.genres
-                    li(class='center')=genre  
-            else
-                h4 No genre Listed
-        h3 Location:
-            if Result.locState != null 
-                h4=Result.locState
-            else
-                h4 Not listed    
-            if Result.locCity != null 
-                h4=Result.locCity
-            else
-                h4 Not listed
-            if Result.locLocal != null 
-                h4=Result.locLocal
-            else
-                h4 Not listed
-        h3 Country Released:
-            if Result.locCountry != null 
-                h4=Result.locCountry
-            else
-                h4 No country
+                    li(class='list')=`${genre}, ` 
+        else
+            h4(class='no-data') No genre listed
+
+        h3 Shot In:
+        if Result.shotIn != null
+            ol
+                each spot in Result.shotIn 
+                    li(style='font-weight: 600; font-size: large')=`${spot.locCountry} ${spot.locState} ${spot.locCity} ${spot.locLocal}`
+        else
+            h4(class='no-data') No Locations Listed
+
+        h3 Country Movie Released:
+        if Result.country != null 
+            h4(class='h-data')=Result.country
+        else
+            h4(class='no-data') No Country Listed
+            
         h3 Year Released:
-            if Result.year != null 
-                h4=Result.year
-            else
-                h4 No year         
+        if Result.year != null 
+            h4(class='h-data')=Result.year
+        else
+            h4(class='no-data') No Year Listed
+
         h3 Director:
-            if Result.dName != null 
-                h4=Result.dName
-            else
-                h4 No Director
+        if Result.dName != null 
+            h4(class='h-data')=Result.dName
+        else
+            h4(class='no-data') No Director Listed
+
         h3 Actors:
-            if Result.actors != 0
+        if Result.actors != 0
+            ul
                 each actor in Result.actors
-                    li(class='center')=actor  
-            else
-                h4 No Actors Listed
-        h3 Rotten Tomatoes Audience Reviews:
-            if Result.rtAudienceNumReviews != null 
-                h4=Result.rtAudienceNumReviews
-            else
-                h4 No Reviews 
+                    li(class='list')=`${actor}, `  
+        else
+            h4(class='no-data') No Actors Listed
+
+        h3 Rotten Tomatoes Number of Audience Reviews:
+        if Result.rtAudienceNumReviews != 0 
+            h4(class='review')=Result.rtAudienceNumReviews
+        else
+            h4(class='no-data') Number of Audience Reviews Not Listed 
+
         h3 Rotten Tomatoes Audience Rating:
-            if Result.rtAudienceRating != null 
-                h4=Result.rtAudienceRating
-            else
-                h4 No Rating 
-        h3 Rotten Tomatoes Top Critic Reviews:
-            if Result.rtTopCriticsNumReviews != null 
-                h4=Result.rtTopCriticsNumReviews
-            else
-                h4 No Reviews
+        if Result.rtAudienceRating != 0 
+            h4(class='review')=Result.rtAudienceRating
+        else
+            h4(class='no-data') Audience Reviews Not Listed 
+
+        h3 Rotten Tomatoes Number of Top Critic Reviews:
+        if Result.rtTopCriticsNumReviews != 0 
+            h4(class='review')=Result.rtTopCriticsNumReviews
+        else
+            h4(class='no-data') Number of Top Critics Reviews Not Listed
+
         h3 Rotten Tomatoes Top Critic Rating: 
-            if Result.rtTopCriticsRating != null 
-                h4=Result.rtTopCriticsRating
-            else
-                h4 No Rating
-        h3 Rotten Tomatoes All Critic Reviews: 
-            if Result.rtAllCriticsNumReviews != null 
-                h4=Result.rtAllCriticsNumReviews
-            else
-                h4 No Reviews
+        if Result.rtTopCriticsRating != 0 
+            h4(class='review')=Result.rtTopCriticsRating
+        else
+            h4(class='no-data') Top Critics Reviews Not Listed
+
+        h3 Rotten Tomatoes Number of All Critic Reviews: 
+        if Result.rtAllCriticsNumReviews != 0 
+            h4(class='review')=Result.rtAllCriticsNumReviews
+        else
+            h4(class='no-data') Number of All Critics Reviews Not Listed
+
         h3 Rotten Tomatoes All Critic Rating:
-            if Result.rtAllCriticsRating != null 
-                h4=Result.rtAllCriticsRating
-            else
-                h4 No Rating
+        if Result.rtAllCriticsRating != 0 
+            h4(class='review')=Result.rtAllCriticsRating
+        else
+            h4(class='no-data') All Critics Reviews Not Listed
                 
-        input(type="text" name="param" placeholder="Search Parameters" style="padding-left:20px; width: 30%;")
-        button(type="submit") Create Comment    
+        h3 Comments:
+            if Result.comments != 0
+                ol
+                    each comment in Result.comments
+                        li=comment
+            else
+                h4(class='no-data') No Comments Made
+        br
+
+        form(id='rate-form' action=`/rate/${Result.movieID}` method="post" style="margin-left:2%")
+            label(for="rateSubmit") 
+                h5 Submit Your Rating!
+            br
+            input(id='rate-button' type="number" name="rateValue" placeholder="1-10" min='1' max='10' value='5')
+            input(id='rate-submit' type='submit' name='rateSubmit')
+
+        br
+        form(id='fav-form' action=`/favorite/${Result.movieID}` method="post" style="margin-left:2%")
+            button(id='favorite-button' type="submit") Add Movie To Favorites List!
+
+        br
+        form(action=`/comment/${Result.movieID}` method='post' id='comment-form' style="margin-left:2%")
+            div
+                textarea(id='comment-box' name="comments" cols="100" rows="10" style="font-family:sans-serif;font-size:1.2em") Leave a comment here!
+            input(type='submit' value="Submit" name='comment' id='comment-submit-button')   
 
         script.
             const Result = !{jsStringify(Result)};
+        script(src="../navBar.js")
         script(src="../moviePage.js")

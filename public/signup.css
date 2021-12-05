@@ -1,12 +1,17 @@
 .login-input {
     padding-left:20px;
-    width: 30%
+    width: 50%
 }
 
 #login-form {
-    background: cyan;
+    background: rgb(0, 197, 197);
 }
 
 body {
     background: lightslategray;
+}
+
+.Center{
+    margin-left: 5%;
+    margin-right: 20%;
 }
