@@ -148,9 +148,9 @@ app.get('/login', (req, res) => {
   res.render('login.pug')
 })
 
-app.get('/login/verify', (req, res) => {
-  userName = req.query.userName
-  pwd = req.query.password
+app.post('/login/verify', (req, res) => {
+  userName = req.body.userName
+  pwd = req.body.password
   User.verifyUserLogin(userName, pwd).then((queryResults) => {
     exists = queryResults
     if(exists == 1){
@@ -192,9 +192,14 @@ app.get('/signup', (req, res) => {
   res.render('signup.pug') 
 })
 
-app.get('/signup/process', (req, res) => {
-  userName = req.query.userName
-  pwd = req.query.password
+app.post('/logout', (req, res) => {
+  res.clearCookie('userName');
+  res.redirect("/");
+})
+
+app.post('/signup/process', (req, res) => {
+  userName = req.body.userName
+  pwd = req.body.password
   User.checkIfUserExists(userName).then((queryResults) => {
     exists = queryResults
     if(exists == 1) // TODO: Add a pop up saying user exists already. Pass a value that can be used for that
@@ -214,7 +219,7 @@ app.get('/signup/process', (req, res) => {
   })
 })
 
-app.get('/delete', (req, res) => {
+app.post('/delete', (req, res) => {
   userName = req.cookies.userName
   User.removeUser(userName).then(User.checkIfUserExists().then((exists) => {
     if(exists == 0){ 

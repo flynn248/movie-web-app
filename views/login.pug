@@ -12,7 +12,7 @@ html(lang="en")
             include header.pug
         div(class="Center" style="" )
             h2(class='login') Login
-            form(id='login-form' action="/login/verify" method="get" style="padding-left:100px; width: 100%")
+            form(id='login-form' action="/login/verify" method="post" style="padding-left:100px; width: 100%")
                 label(for="userName") UserName:
                 br
                 input(class='login-input' type="text" name="userName" placeholder="UserName")

@@ -11,26 +11,27 @@ html
     body 
         .header
             include header.pug
-            h2 User Page 
+            h2(style="margin-left:0.5%")=`${Result.userName}'s User Page` 
             div(class='jim-carrey')
-            h3(style="font size=3")=Result.userName
-                h4(id="favorite-title") Favorites:
-                    each item in Result.favMovie
-                        if item.favMovieTitle != null 
-                            a(class='fave-movie-title' href=`/movie/${item.favMovieID}`)=item.favMovieTitle + ","
-                        else 
-                            h6 No movies are favorited
-                h5(id="user-comment") Comments:
-                    each comm in Result.comment
-                        if comm.txt != null
-                            li 
-                                a(href=`/movie/${comm.comMovieID}`)=comm.txt
-                        else 
-                            h6 No comments are commented
-        div(class="Center")
-            h6(id='Delete-Account')
-                form(action="/delete" method="get" style="padding-left:100px; width: 100%")
-                    button(type="submit") Delete Account
+            h4(id="favorite-title" style="margin-left:0.5%") Favorites:
+                each item in Result.favMovie
+                    if item.favMovieTitle != null 
+                        a(class='fave-movie-title' href=`/movie/${item.favMovieID}` style="margin-left:0.5%")=item.favMovieTitle + ","
+                    else 
+                        h6(style="margin-left:0.5%") No movies are favorited
+            h5(id="user-comment" style="margin-left:0.5%") Comments:
+                each comm in Result.comment
+                    if comm.txt != null
+                        li 
+                            a(href=`/movie/${comm.comMovieID}` style="margin-left:0.5%")=comm.txt
+                    else 
+                        h6(style="margin-left:0.5%") No comments are commented
+        br
+        form(action="/logout" method="post" style="margin-left:2.5%")
+            button(type="submit") Log Out
+        br
+        form(action="/delete" method="post" style="margin-left:2.5%")
+            button(type="submit") Delete Account
                     
     <!--line: 18 - when we eed future stuff to go under the favorites line its in the line below this-->
     <!--line 20 -displays the favorite movies of the user-->
