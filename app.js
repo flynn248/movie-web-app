@@ -5,21 +5,22 @@ server.watch(__dirname + "/public");
 // automatically refresh home page
 server.server.once("connection", () => {
   setTimeout(() => {
-    server.refresh("/")
+    server.refresh("/");
   }, 100);
 });
 
-var connectLiveReload = require("connect-livereload")
+var connectLiveReload = require("connect-livereload");
 
-const Search = require(__dirname + '/functions/search.js')
-const User = require(__dirname + '/functions/user.js')
-const StoredProcedure = require(__dirname + '/functions/storedProcedure.js')
-const MovieFunctions = require(__dirname + '/functions/movieFunctions.js')
+const Search = require(__dirname + '/functions/search.js');
+const User = require(__dirname + '/functions/user.js');
+const StoredProcedure = require(__dirname + '/functions/storedProcedure.js');
+const MovieFunctions = require(__dirname + '/functions/movieFunctions.js');
 
 const express = require('express');
 const jsStringify = require('js-stringify');
 const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");
+const { performance } = require('perf_hooks');
 
 const app = express();
 const path = require('path');
@@ -32,7 +33,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 
 // view engine setup
-app.set('view engine', 'pug')
+app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -104,11 +105,14 @@ app.get('/', verifyUserCookie, (req, res) => {
 })
 
 app.get('/Results', (req, res) => {
-  searchInput = req.query.param
-  searchType = req.query.type
+  searchInput = req.query.param;
+  searchType = req.query.type;
+
+  //const startTime = performance.now();
   Search.getMovieFromSearch(searchType, searchInput).then((queryResults) => {
-    Result = queryResults
+    Result = queryResults;
     if(Result.movies.length != 0){
+      //console.log(`Search for movie with search type of '${searchType}' and parameter of '${searchInput}' took ${(performance.now() - startTime).toFixed(3)}ms`)
       res.render('result.pug', Result)
     }
     else {
@@ -133,34 +137,34 @@ app.get('/movie/:movieID', verifyUserCookie, verifyIfFavorite, (req, res) =>{
       ErrMsg = {
         message: "Failed to retrieve movie details"
       }
-      res.render('errorScreen.pug', ErrMsg)
+      res.render('errorScreen.pug', ErrMsg);
     }
   }).catch(e => {
     ErrMsg = {
       message: "Failed to retrieve movie details"
     }
-    res.render('errorScreen.pug', ErrMsg)
+    res.render('errorScreen.pug', ErrMsg);
   })
 }) 
 
 
 app.get('/login', (req, res) => {
-  res.render('login.pug')
+  res.render('login.pug');
 })
 
 app.post('/login/verify', (req, res) => {
-  userName = req.body.userName
-  pwd = req.body.password
+  userName = req.body.userName;
+  pwd = req.body.password;
   User.verifyUserLogin(userName, pwd).then((queryResults) => {
-    exists = queryResults
+    exists = queryResults;
     if(exists == 1){
       res.redirect(`/user/${userName}`)
     }
     else if(exists == 0) // TODO: Add a pop up saying invlaid username. Pass a value that can be used for that
-    res.redirect("/login")
+    res.redirect("/login");
     else{
-      console.log("ERROR: User Account Quantity Invalid!")
-      res.redirect("/login")
+      console.log("ERROR: User Account Quantity Invalid!");
+      res.redirect("/login");
     }
   })
 })
