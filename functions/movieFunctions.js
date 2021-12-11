@@ -3,6 +3,7 @@ const SP = require('./storedProcedure')
 const db = database.db
 
 const favoriteMovie = (movieID, userName) => {
+    // Add movie to user's favorites list.
     return new Promise((resolve,reject) => {
         sql = `
         INSERT INTO Favorites VALUES(${movieID}, '${userName}')
@@ -23,6 +24,7 @@ const favoriteMovie = (movieID, userName) => {
 }
 
 const removeFavoriteMovie = (movieID, userName) => {
+    // Remove the movie from the user's favorites list.
     return new Promise((resolve,reject) => {
         sql = `
         DELETE FROM Favorites WHERE movieID = ${movieID} AND userName LIKE '${userName}'
@@ -43,6 +45,8 @@ const removeFavoriteMovie = (movieID, userName) => {
 }
 
 const makeComment = (userName, movieID, txt) => {
+    // Make a new comment on a movie by a user.
+
     return new Promise((resolve, reject) => {
         SP.getMaxCommentID().then((commentID) => {
             sql = `
@@ -83,6 +87,8 @@ const makeComment = (userName, movieID, txt) => {
 }
 
 const rateMovie = (movieID, userName, rating) => {
+    // Make a new rating for a movie.
+
     return new Promise((resolve, reject) => {
         SP.getMaxRatingID().then((ratingID) => {
             sql = `
@@ -123,6 +129,8 @@ const rateMovie = (movieID, userName, rating) => {
 }
 
 const updateRating = (movieID, userName, rating) => {
+    // If a user has already rated the movie, only update it.
+    
     return new Promise((resolve, reject) => {
         sql = `
         UPDATE UserRating

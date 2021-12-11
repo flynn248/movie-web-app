@@ -1,2 +1,3 @@
 # movie-web-app
-A movie selector application that was written for CompSci 366: Database Management Systems.
+Movie web application developed for Database Management Systems
+Authors: Shane Flynn, Atlas Filipini, Bryce Erdman

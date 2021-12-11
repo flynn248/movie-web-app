@@ -16,6 +16,7 @@ const addNewUser = (UN, PWD) => {
 
 const removeUser = (UN) => {
     return new Promise((resolve, reject) => {
+        // Deleting comments
         sql =  `
         DELETE FROM HaveCom WHERE commentID IN (SELECT DISTINCT c.commentID FROM MakeCom c WHERE c.userName LIKE '${UN}')
         `
@@ -31,23 +32,6 @@ const removeUser = (UN) => {
             if(e) 
                 throw e
         })
-
-        sql = `
-        DELETE FROM User WHERE userName LIKE '${UN}'
-        `
-        db.query(sql, (e, result) => {
-            if(e) 
-                throw e
-        })
-        
-        sql = `
-        DELETE FROM Favorites WHERE userName LIKE '${UN}'
-        `
-        db.query(sql, (e, result) => {
-            if(e) 
-                throw e
-        })
-        
         
         sql = `
         DELETE FROM MakeCom WHERE userName LIKE '${UN}'
@@ -57,6 +41,25 @@ const removeUser = (UN) => {
                 throw e
         })
 
+        // Delete from Use table
+        sql = `
+        DELETE FROM User WHERE userName LIKE '${UN}'
+        `
+        db.query(sql, (e, result) => {
+            if(e) 
+                throw e
+        })
+        
+        // Delete from Favorites table
+        sql = `
+        DELETE FROM Favorites WHERE userName LIKE '${UN}'
+        `
+        db.query(sql, (e, result) => {
+            if(e) 
+                throw e
+        })
+        
+        // Delete the user's ratings
         sql =  `
         DELETE FROM HaveRating 
         WHERE ratingID IN (
@@ -96,6 +99,7 @@ const removeUser = (UN) => {
 }
 
 const checkIfUserExists = (UN) => {
+    // Check if a user exists. A count of 1 == exists
     return new Promise((resolve, reject) => {
         sql = `
         SELECT COUNT(DISTINCT userName) AS count
@@ -118,8 +122,8 @@ const checkIfUserExists = (UN) => {
     })
 }
 
-// Verify the input of the Username and Password
 const verifyUserLogin = (UN, PWD) => {
+    // Verify the input of the Username and Password
     return new Promise((resolve, reject) => {
         sql = `
         SELECT COUNT(DISTINCT userName) AS count
@@ -140,13 +144,13 @@ const verifyUserLogin = (UN, PWD) => {
     })
 }
 
-/* 
+const getUserProfile = uN => {
+    /* 
     Return user profile information.
         -Username
         -Fav movies
         -Comments made on movies
-*/
-const getUserProfile = uN => {
+    */
     uN = db.escape(uN);
     return new Promise((resolve, reject) => {
         sql = `
@@ -200,6 +204,7 @@ const getUserProfile = uN => {
 }
 
 const queryComments = (uN, userDetails) => {
+    // Separate section to get a user's comments.
     sql = `
     SELECT DISTINCT c.commentID, c.txt, 
                     hC.movieID AS comMovieID
@@ -243,6 +248,7 @@ const queryComments = (uN, userDetails) => {
 }
 
 const alreadyFavorited = async (movieID, UN) => {
+    // Check if the user has already favorited this movie
     return new Promise((resolve, reject) => {
         sql = `
         SELECT COUNT(movieID) AS count
@@ -265,6 +271,7 @@ const alreadyFavorited = async (movieID, UN) => {
 }
 
 const alreadyRated = (movieID, UN) => {
+    // check if the user has already rated this movie
     return new Promise((resolve, reject) => {
         sql = `
         SELECT COUNT(DISTINCT hr.movieID) AS count

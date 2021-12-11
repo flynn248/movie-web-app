@@ -71,6 +71,7 @@ const getMaxRatingID = () => {
         })
     })
 }
+
 module.exports = {
     getMovieCount: getMovieCount,
     getActorCountInMovie: getActorCountInMovie,
@@ -79,6 +80,7 @@ module.exports = {
     getMaxCommentID: getMaxCommentID,
     getMaxRatingID: getMaxRatingID
 }
+
 /* 
 Query that is being used for getMovieCount:
 

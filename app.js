@@ -1,3 +1,8 @@
+/*
+Movie web application developed for Database Management Systems
+Authors: Shane Flynn, Atlas Filipini, Bryce Erdman
+*/
+
 var livereload = require('livereload');
 var server = livereload.createServer();
 server.watch(__dirname + "/public");
@@ -11,6 +16,7 @@ server.server.once("connection", () => {
 
 var connectLiveReload = require("connect-livereload");
 
+// Import function from other files
 const Search = require(__dirname + '/functions/search.js');
 const User = require(__dirname + '/functions/user.js');
 const StoredProcedure = require(__dirname + '/functions/storedProcedure.js');
@@ -26,6 +32,7 @@ const app = express();
 const path = require('path');
 const exp = require('constants');
 
+// Set up middleware
 app.use(connectLiveReload());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -40,6 +47,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 const PORT = process.env.PORT || 9090
 
 const verifyUserCookie = (req, res, next) => {
+  /* 
+  Checks if the user is logged in 
+  */
   Cookies = {
     userName: undefined
   }
@@ -51,6 +61,9 @@ const verifyUserCookie = (req, res, next) => {
 }
 
 const verifyIfFavorite = async (req, res, next) => {
+  /* 
+  Checks if a movie is already favorited by a user. 
+  */
   Fav = {
     isFav: undefined
   }
@@ -68,6 +81,9 @@ const verifyIfFavorite = async (req, res, next) => {
 }
 
 const verifyIfRated = async (req, res, next) => {
+  /* 
+  Check if a movie has been rated by a user already. 
+  */  
   Rate = {
     isRated: undefined
   }
@@ -86,8 +102,10 @@ const verifyIfRated = async (req, res, next) => {
   next();
 }
 
-// Go to localhost:9090 in your browser while the program is running
 app.get('/', verifyUserCookie, (req, res) => {
+  /* 
+  Send data to be displayed onto the homepage. 
+  */ 
   Result = {
     userName: Cookies.userName
   }
@@ -105,6 +123,9 @@ app.get('/', verifyUserCookie, (req, res) => {
 })
 
 app.get('/Results', (req, res) => {
+  /* 
+  Get the movie titles and id that match a user query and send to result.pug 
+  */
   searchInput = req.query.param;
   searchType = req.query.type;
 
@@ -125,6 +146,9 @@ app.get('/Results', (req, res) => {
 })
 
 app.get('/movie/:movieID', verifyUserCookie, verifyIfFavorite, (req, res) =>{
+  /* 
+   Get the details of a movie and send it to moviePage.pug
+  */
   movieID = req.params['movieID'];
   Search.getMovieDetails(movieID).then((queryResults) => {
     try{
@@ -153,6 +177,9 @@ app.get('/login', (req, res) => {
 })
 
 app.post('/login/verify', (req, res) => {
+  /* 
+  Verify user login credentials. 
+  */
   userName = req.body.userName;
   pwd = req.body.password;
   User.verifyUserLogin(userName, pwd).then((queryResults) => {
@@ -184,6 +211,9 @@ app.use('/user/:userName', (req, res, next) => {
 })
 
 app.get('/user/:userName', (req, res) => {
+  /* 
+  Get the user profile info and send to userPage.pug
+  */
   userName = req.params['userName']
   User.getUserProfile(userName).then((queryResults) => {
     Result = queryResults
@@ -202,11 +232,15 @@ app.post('/logout', (req, res) => {
 })
 
 app.post('/signup/process', (req, res) => {
+  /* 
+  A user must enter a unique username to sign up for an account.
+  If it is unique, create the user and redirect to their userpage.
+  */
   userName = req.body.userName
   pwd = req.body.password
   User.checkIfUserExists(userName).then((queryResults) => {
     exists = queryResults
-    if(exists == 1) // TODO: Add a pop up saying user exists already. Pass a value that can be used for that
+    if(exists == 1)
       res.render('errorScreen.pug', ErrMsg = {message: "Account already exists :/"})
     else if(exists == 0){
       User.addNewUser(userName, pwd).then((queryResults) => {
@@ -224,6 +258,9 @@ app.post('/signup/process', (req, res) => {
 })
 
 app.post('/delete', (req, res) => {
+  /* 
+  Delete a user profile and all comments, favorite movies, and ratings that the user left.
+  */
   userName = req.cookies.userName
   User.removeUser(userName).then(User.checkIfUserExists().then((exists) => {
     if(exists == 0){ 
@@ -241,6 +278,9 @@ app.post('/delete', (req, res) => {
 })
 
 app.post('/comment/:movieID', (req, res) => {
+  /* 
+  Process a comment that was left on a movie.
+  */
   userName = req.cookies.userName
   movieID = req.params['movieID']
   txt = req.body.comments
@@ -259,6 +299,9 @@ app.post('/comment/:movieID', (req, res) => {
 })
 
 app.post('/favorite/:movieID', (req, res) => {
+  /* 
+  Process the favoriting of a movie by a user.
+  */
   userName = req.cookies.userName
   movieID = req.params['movieID']
   MovieFunctions.favoriteMovie(movieID, userName).then((result) => {
@@ -272,6 +315,9 @@ app.post('/favorite/:movieID', (req, res) => {
 })
 
 app.post('/removeFavorite/:movieID', (req, res) => {
+  /* 
+  Process the removal of a movie by a user.
+  */
   userName = req.cookies.userName;
   movieID = req.params['movieID'];
   MovieFunctions.removeFavoriteMovie(movieID, userName).then((success) => {
@@ -284,11 +330,14 @@ app.post('/removeFavorite/:movieID', (req, res) => {
 })
 
 app.post('/rate/:movieID/:rateValue', verifyIfRated, (req, res) => {
+  /* 
+  Process the rating of a movie by a user.
+  */
   userName = req.cookies.userName;
   movieID = req.params['movieID'];
   rating = req.params['rateValue'];
 
-  if(Rate.isRated === true){
+  if(Rate.isRated === true){ // If user has already rated this movie.
     MovieFunctions.updateRating(movieID, userName, rating).then((success) => {
       if(success){
         res.redirect(`/movie/${movieID}`)
@@ -297,7 +346,7 @@ app.post('/rate/:movieID/:rateValue', verifyIfRated, (req, res) => {
       }
 
     })
-  }else{
+  }else{ // If user has not rated the movie before.
     MovieFunctions.rateMovie(movieID, userName, rating).then((success) => {
       if(success){ 
         res.redirect(`/movie/${movieID}`)
@@ -308,6 +357,7 @@ app.post('/rate/:movieID/:rateValue', verifyIfRated, (req, res) => {
   }
 })
 
+// Go to http://localhost:9090
 app.listen(PORT, () => {
   console.log(`App running on localhost:${PORT}`);
   console.log('Press Ctrl+C to quit.');

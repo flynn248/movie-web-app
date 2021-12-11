@@ -1,5 +1,5 @@
 {
-    "Comment":"rename as credentials.json and add data_ also remove this attribute",
+    "Comment":"rename as credentials.json and add info. Also remove this attribute",
     "host": "washington.uww.edu",
     "user": "",
     "password": "",

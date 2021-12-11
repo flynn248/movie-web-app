@@ -1,6 +1,7 @@
-var $ = id => {return document.getElementById(id);};
+var $ = id => {return document.getElementById(id);}; // Makes things looks cleaner
 
 const commentBox = (USERNAME) => {
+    // Check if a user is logged in when they click the submit comment button.
     $('comment-submit-button').addEventListener('click', () =>{
         if(USERNAME === undefined || USERNAME === 'undefined'){ // If user is not logged in
             var willSignUp = window.confirm("You must be signed in to comment on a movie.\nWould you like to sign up?")
@@ -27,6 +28,7 @@ const commentBox = (USERNAME) => {
 }
 
 const addToFavButton = (USERNAME) => {
+    // Check if a user is logged in when they click the favorite button.
     $('favorite-button').addEventListener('click', () => {
         if(USERNAME === undefined || USERNAME === 'undefined'){ // If user is not logged in
             var willSignUp = window.confirm("You must be signed in to favorite a movie.\nWould you like to sign up?")
@@ -43,6 +45,7 @@ const addToFavButton = (USERNAME) => {
 }
 
 const remFromFavButton = (USERNAME, title, movieID) => {
+    // Since the movie has been favorited, change the button to a 'remove from favorites' button.
     var form = $('fav-form')
     form.setAttribute('action', `/removeFavorite/${Result.movieID}`);
     
@@ -51,7 +54,7 @@ const remFromFavButton = (USERNAME, title, movieID) => {
     
     favButton.addEventListener('click', () => {
         var willRemove = this.window.confirm(`Would you like to remove ${Result.title} from your favorites list?`)
-        if(!willRemove){ // Will sign up. Go to signup page
+        if(!willRemove){ // Does not want to remove from favorites list
             form.setAttribute('method', 'get');
             form.setAttribute('action', `/movie/${Result.movieID}`);
         }
@@ -59,6 +62,7 @@ const remFromFavButton = (USERNAME, title, movieID) => {
 }
 
 const rateMovie = () => {
+    // Check if a user is logged in when they click the rate button.
     $('rate-submit').addEventListener('click', () => {
         form = $('rate-form')
         if(USERNAME === undefined || USERNAME === 'undefined'){ // If user is not logged in
@@ -80,6 +84,7 @@ const rateMovie = () => {
 }
 
 const rateButton = () => {
+    // Verify that the value in the rating box is correct.
     $('rate-button').addEventListener('change', () =>{
         rating = $('rate-button')
         if(!(rating.value > 0 && rating.value <= 10) || isNaN(rating.value)){
@@ -100,6 +105,4 @@ window.addEventListener('load', function () {
     }else{
         addToFavButton(USERNAME);
     }
-
-
 });

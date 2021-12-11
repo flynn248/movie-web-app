@@ -1,4 +1,4 @@
-//This file can be used for normal JavaScript stuff
+// Add the username as a link to the header bar only if the user is logged in.
 
 var $ = id => {return document.getElementById(id);};
 

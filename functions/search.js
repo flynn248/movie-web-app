@@ -151,6 +151,7 @@ const getMovieDetails = (ID) => {
             }
             rjct(obj)
         })).then(movieDetails => {
+            // To avoid dealing with duplicated user rating values and how to handle it, separated the query for the all user's ratings from the main query.
             sql = `
             SELECT u.rating
             FROM UserRating AS u
